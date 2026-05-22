@@ -159,27 +159,36 @@
   function handleQuickAction(text) {
     const lower = String(text || "").toLowerCase();
 
+    function finishQuickAction(message) {
+      if (message) appendBotMessage(message);
+      setTimeout(() => showQuickReplies(defaultQuickReplies), 300);
+    }
+
     if (lower.includes("resume")) {
       appendUserMessage(text);
       window.open("./Sanush%20Resume.pdf", "_blank");
+      finishQuickAction("Opened Sanush's resume for you. What would you like to explore next?");
       return true;
     }
 
     if (lower.includes("github")) {
       appendUserMessage(text);
       window.open("https://github.com/SA-Sanush", "_blank");
+      finishQuickAction("Opened Sanush's GitHub. You can also check his skills, education, contact details, or resume.");
       return true;
     }
 
     if (lower.includes("linkedin")) {
       appendUserMessage(text);
       window.open("https://www.linkedin.com/in/sa-sanush/", "_blank");
+      finishQuickAction("Opened Sanush's LinkedIn. What else would you like to know?");
       return true;
     }
 
     if (lower.includes("email")) {
       appendUserMessage(text);
       window.open("mailto:sasanush86@gmail.com");
+      finishQuickAction("Opened an email draft for Sanush. I can still help with his resume, skills, education, or contact info.");
       return true;
     }
 

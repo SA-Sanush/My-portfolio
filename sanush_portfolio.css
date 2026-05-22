@@ -2794,9 +2794,11 @@ footer {
   gap: 8px;
   width: 100%;
   max-width: 320px;
+  min-width: 0;
 }
 #chat-name-input {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,224,0,0.2);
   border-radius: 12px;
@@ -2822,6 +2824,7 @@ footer {
   cursor: none;
   transition: all 0.2s;
   white-space: nowrap;
+  flex: 0 0 auto;
 }
 #chat-name-submit:hover {
   background: #fff;
@@ -2995,5 +2998,20 @@ footer {
   #chat-trigger {
     right: 20px;
     bottom: 24px;
+  }
+}
+
+@media (max-width: 360px) {
+  #chat-name-screen {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .name-input-row {
+    flex-direction: column;
+  }
+
+  #chat-name-submit {
+    width: 100%;
   }
 }
