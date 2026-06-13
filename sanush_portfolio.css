@@ -4658,6 +4658,43 @@ footer {
    NEW FEATURES ADDITIONS ( switcher, cmd+k, raycasting, chat cards )
    ══════════════════════════════════════════ */
 
+/* Command Palette Trigger Button */
+.cmd-trigger-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 99px;
+  padding: 6px 12px;
+  color: rgba(245,245,240,0.55);
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+.cmd-trigger-btn:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: color-mix(in srgb, var(--y) 40%, transparent);
+  color: var(--y);
+}
+.cmd-trigger-btn kbd {
+  display: inline-block;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 5px;
+  padding: 1px 6px;
+  font-size: 10px;
+  font-family: inherit;
+  color: rgba(245,245,240,0.45);
+  letter-spacing: 0.04em;
+}
+@media (max-width: 768px) {
+  .cmd-trigger-btn span { display: none; }
+  .cmd-trigger-btn kbd { display: none; }
+}
+
 /* Command Palette Overlay */
 .cmd-overlay {
   position: fixed;
