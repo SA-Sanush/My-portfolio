@@ -1366,7 +1366,7 @@ document.head.appendChild(style);
   const previewPrice = document.querySelector(".travel-preview-card .p-price");
   
   const travelData = {
-    "Kerala": { bg: "linear-gradient(135deg, #FF9F00, #FFE000)", loc: "Exploring Kerala, IN", price: "$299/day" },
+    "Kerala": { bgAccent: true, loc: "Exploring Kerala, IN", price: "$299/day" },
     "Pune": { bg: "linear-gradient(135deg, #00C6FF, #0072FF)", loc: "Visiting Pune City, IN", price: "$199/day" },
     "Paris": { bg: "linear-gradient(135deg, #f857a6, #ff5858)", loc: "Sightseeing Paris, FR", price: "$499/day" }
   };
@@ -1380,12 +1380,28 @@ document.head.appendChild(style);
       const dest = tab.textContent.trim();
       const data = travelData[dest];
       if (data && travelVisual) {
-        travelVisual.style.background = data.bg;
+        if (data.bgAccent) {
+          const accent = getComputedStyle(document.documentElement).getPropertyValue('--y').trim() || '#ffe000';
+          const warm = `color-mix(in srgb, ${accent} 60%, #ff5500)`;
+          travelVisual.style.background = `linear-gradient(135deg, ${warm}, ${accent})`;
+        } else {
+          travelVisual.style.background = data.bg;
+        }
         if (previewLoc) previewLoc.textContent = data.loc;
         if (previewPrice) previewPrice.textContent = data.price;
       }
     });
   });
+
+  // Apply initial Kerala accent gradient
+  (function() {
+    const activeTab = document.querySelector(".t-tab.active[data-bg-accent]");
+    if (activeTab && travelVisual) {
+      const accent = getComputedStyle(document.documentElement).getPropertyValue('--y').trim() || '#ffe000';
+      const warm = `color-mix(in srgb, ${accent} 60%, #ff5500)`;
+      travelVisual.style.background = `linear-gradient(135deg, ${warm}, ${accent})`;
+    }
+  })();
 
   // 8. DayTone Mood Grid Hover Interaction
   const moodLabel = document.querySelector(".mood-label");
@@ -1486,15 +1502,29 @@ document.head.appendChild(style);
       0,0,1,2,1,0,2, 0,1,0,2,1,3,0, 1,0,2,1,0,0,2,
       0,2,1,3,0,1,0, 2,1,0,1,0,2,1, 3,0,0,2,1,0,1
     ];
-    const colors = ["#1a1a1a","rgba(255,224,0,0.15)","rgba(255,224,0,0.4)","rgba(255,224,0,0.75)","#FFE000"];
+    window._ghHeatmapActivity = activity; // store for live theme refresh
     const tooltips = ["No activity","1-2 commits","3-4 commits","5-6 commits","7+ commits"];
-    activity.forEach((level) => {
-      const cell = document.createElement("div");
-      cell.className = "gh-cell";
-      cell.style.background = colors[Math.min(level, 4)];
-      cell.title = tooltips[Math.min(level, 4)];
-      heatmap.appendChild(cell);
-    });
+    function buildHeatmapColors(accentHex) {
+      return ["#1a1a1a",
+        `color-mix(in srgb, ${accentHex} 15%, transparent)`,
+        `color-mix(in srgb, ${accentHex} 40%, transparent)`,
+        `color-mix(in srgb, ${accentHex} 75%, transparent)`,
+        accentHex];
+    }
+    function renderHeatmap(accentHex) {
+      heatmap.innerHTML = "";
+      const colors = buildHeatmapColors(accentHex);
+      activity.forEach((level) => {
+        const cell = document.createElement("div");
+        cell.className = "gh-cell";
+        cell.style.background = colors[Math.min(level, 4)];
+        cell.title = tooltips[Math.min(level, 4)];
+        heatmap.appendChild(cell);
+      });
+    }
+    const initialAccent = getComputedStyle(document.documentElement).getPropertyValue('--y').trim() || '#ffe000';
+    renderHeatmap(initialAccent);
+    window._renderHeatmap = renderHeatmap; // expose for live updates
   }
 
   /* ── 5. PROJECT MODALS ── */
@@ -1507,7 +1537,7 @@ document.head.appendChild(style);
         <div>&gt; Voice engine: Whisper STT [active]</div>
         <div>&gt; Long-term memory: ChromaDB vector DB</div>
         <div>&gt; LLM fallback chain: 9 providers</div>
-        <div style="color:#FFE000">&gt; STATUS: ONLINE ✦ All systems nominal</div>
+        <div style="color:var(--y)">&gt; STATUS: ONLINE ✦ All systems nominal</div>
       </div>`,
       desc: "A cross-platform AI desktop voice assistant that combines the power of 9 LLM APIs with ChromaDB-powered vector memory for persistent context, offline wake-word activation, and full OS-level voice control.",
       features: [
@@ -1528,8 +1558,8 @@ document.head.appendChild(style);
         <div style="font-size:13px;color:rgba(245,245,240,0.45);margin-bottom:12px">Interactive Chatbot Assistant</div>
         <div style="background:#111;border-radius:8px;padding:12px;font-size:12px;text-align:left;line-height:2">
           <div style="color:#27ae60">Visitor: "Hey, what are Sanush's skills?"</div>
-          <div style="color:#FFE000">Chatbot: "Sanush is skilled in Front End Development, UI/UX Design, and AI & Python..."</div>
-          <div style="color:#FFE000">&gt; Live Status: Online and Ready ✦</div>
+          <div style="color:var(--y)">Chatbot: "Sanush is skilled in Front End Development, UI/UX Design, and AI &amp; Python..."</div>
+          <div style="color:var(--y)">&gt; Live Status: Online and Ready ✦</div>
         </div>
       </div>`,
       desc: "A personal portfolio website built with HTML, CSS, JavaScript, and Three.js — features 3D visuals, smooth animations, and an AI-powered chatbot assistant.",
@@ -1548,9 +1578,9 @@ document.head.appendChild(style);
       visual: `<div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">
         <span style="background:rgba(0,247,255,0.7);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600">😊 Productive</span>
         <span style="background:rgba(111,207,151,0.7);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600">😌 Calm</span>
-        <span style="background:rgba(255,224,0,0.7);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600">⚡ Energetic</span>
+        <span style="background:color-mix(in srgb, var(--y) 70%, transparent);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600">⚡ Energetic</span>
         <span style="background:rgba(255,100,100,0.7);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600">😰 Stressed</span>
-        <span style="width:100%;text-align:center;color:#FFE000;font-size:13px;margin-top:8px">Burnout risk: LOW — Keep it up! ✦</span>
+        <span style="width:100%;text-align:center;color:var(--y);font-size:13px;margin-top:8px">Burnout risk: LOW — Keep it up! ✦</span>
       </div>`,
       desc: "An AI-driven wellness assistant using ensemble ML models (Random Forest, Decision Trees) and VADER sentiment analytics to track daily mental health logs, predict burnout levels, and generate actionable analytics reports.",
       features: [
@@ -1569,10 +1599,10 @@ document.head.appendChild(style);
       visual: `<div style="text-align:center">
         <div style="font-size:13px;color:rgba(245,245,240,0.45);margin-bottom:12px">Resume Matching Engine</div>
         <div style="background:#111;border-radius:8px;padding:12px;font-size:12px;text-align:left;line-height:2">
-          <div style="color:#FFE000">📄 resume_sanush.pdf → Parsing...</div>
+          <div style="color:var(--y)">📄 resume_sanush.pdf → Parsing...</div>
           <div style="color:#27ae60">✓ Skills extracted: [Python, React, Flask, SQL]</div>
           <div style="color:#27ae60">✓ Experience: 2 years</div>
-          <div style="color:#FFE000">⚡ JD Match Score: <b style="font-size:16px">92%</b></div>
+          <div style="color:var(--y)">⚡ JD Match Score: <b style="font-size:16px">92%</b></div>
         </div>
       </div>`,
       desc: "An intelligent recruitment matching dashboard that automatically parses PDF and Word resumes using spaCy NLP, extracts core tech skills, and ranks candidate compatibility scores against target job descriptions.",
@@ -1642,7 +1672,7 @@ document.head.appendChild(style);
     const ctx = confettiCanvas.getContext("2d");
     confettiCanvas.width = window.innerWidth;
     confettiCanvas.height = window.innerHeight;
-    const colors = ["#FFE000","#FF9F00","#fff","#00f7ff","#6FCF97","#FF6B6B"];
+    const colors = [window.currentAccentColor || "#FFE000", `color-mix(in srgb, ${window.currentAccentColor || "#FFE000"} 60%, #ff5500)`,"#fff","#00f7ff","#6FCF97","#FF6B6B"];
     const particles = Array.from({length: 120}, () => ({
       x: Math.random() * confettiCanvas.width,
       y: -20,
@@ -1744,7 +1774,7 @@ document.head.appendChild(style);
   if (fab) {
     setInterval(() => {
       if (!fab.classList.contains("show")) return;
-      fab.style.boxShadow = "0 0 0 10px rgba(255,224,0,0.12), 0 8px 32px rgba(0,0,0,0.5)";
+      fab.style.boxShadow = `0 0 0 10px color-mix(in srgb, var(--y) 12%, transparent), 0 8px 32px rgba(0,0,0,0.5)`;
       setTimeout(() => { fab.style.boxShadow = ""; }, 700);
     }, 3500);
   }
@@ -1814,6 +1844,18 @@ document.head.appendChild(style);
           obj.color.copy(threeColor);
         }
       });
+    }
+    // Update heatmap cells to match new accent
+    if (typeof window._renderHeatmap === 'function') {
+      window._renderHeatmap(colorHex);
+    }
+
+    // Update Kerala travel tab gradient if it's the active tab
+    const travelVis = document.querySelector(".travel-visual");
+    const keralaTab = document.querySelector(".t-tab[data-bg-accent].active");
+    if (keralaTab && travelVis) {
+      const warm = `color-mix(in srgb, ${colorHex} 60%, #ff5500)`;
+      travelVis.style.background = `linear-gradient(135deg, ${warm}, ${colorHex})`;
     }
   };
 
