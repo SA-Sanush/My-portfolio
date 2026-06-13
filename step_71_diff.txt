@@ -1,0 +1,101 @@
+Created At: 2026-06-13T06:02:05Z
+Completed At: 2026-06-13T06:02:05Z
+The following changes were made by the multi_replace_file_content tool to: /home/crystal/Desktop/Portfolio/sanush_portfolio.js. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -347,8 +347,27 @@
+     mouseY = -(e.clientY / window.innerHeight - 0.5) * 0.3;
+   });
+ 
++  // ── SCROLL PARALLAX tracking ──
++  let bgScrollY = 0;
++  let bgScrollTarget = 0;
++  window.addEventListener("scroll", () => {
++    bgScrollTarget = window.scrollY;
++  }, { passive: true });
++
++  // ── Pause render when canvas is off screen ──
++  let bgVisible = true;
++  const bgVisObs = new IntersectionObserver(
++    (entries) => { bgVisible = entries[0].isIntersecting; },
++    { threshold: 0 }
++  );
++  bgVisObs.observe(canvas);
++
+   function bgRender() {
+     requestAnimationFrame(bgRender);
++    if (!bgVisible) return;
++    // Smooth scroll interpolation
++    bgScrollY += (bgScrollTarget - bgScrollY) * 0.06;
++    const scrollOffset = (bgScrollY / Math.max(document.body.scrollHeight - window.innerHeight, 1)) * 6;
+     const t = performance.now() * 0.001;
+     shapes.forEach((s) => {
+       s.rotation.x += s.userData.rx;
+@@ -355,9 +355,11 @@
+       s.position.y =
+-        s.userData.baseY + Math.sin(t * 0.45 + s.userData.phase) * 0.55;
++        s.userData.baseY + Math.sin(t * 0.45 + s.userData.phase) * 0.55 - scrollOffset * 0.35;
+       s.position.x += Math.sin(t * 0.12 + s.userData.phase) * s.userData.drift;
+     });
+     cam.position.x += (mouseX - cam.position.x) * 0.04;
+-    cam.position.y += (mouseY - cam.position.y) * 0.04;
++    // Combine mouse Y + scroll parallax
++    const targetCamY = mouseY - scrollOffset * 0.18;
++    cam.position.y += (targetCamY - cam.position.y) * 0.04;
+     cam.lookAt(0, 0, -6);
+     renderer.render(scene, cam);
+   }
+@@ -922,9 +922,18 @@
+     isDragging = false;
+   });
+ 
++  // ── Pause render when showcase is
+<truncated 3530 bytes>
+═════════════════
++   MAGNET EFFECT ON CTA BUTTONS
++═══════════════════════════════════════ */
++(function () {
++  const MAGNET_STRENGTH = 0.38;
++  const MAGNET_RADIUS = 80;
++
++  function attachMagnet(btn) {
++    btn.addEventListener("mousemove", (e) => {
++      const rect = btn.getBoundingClientRect();
++      const cx = rect.left + rect.width / 2;
++      const cy = rect.top + rect.height / 2;
++      const dx = e.clientX - cx;
++      const dy = e.clientY - cy;
++      const dist = Math.hypot(dx, dy);
++      if (dist < MAGNET_RADIUS) {
++        const tx = dx * MAGNET_STRENGTH;
++        const ty = dy * MAGNET_STRENGTH;
++        btn.style.transform = `translate(${tx}px, ${ty}px)`;
++      }
++    });
++    btn.addEventListener("mouseleave", () => {
++      btn.style.transform = "";
++    });
++  }
++
++  document.querySelectorAll(".btn-y, .btn-ghost, .nav-cta, .resume-cta").forEach(attachMagnet);
++})();
++
++/* ═══════════════════════════════════════
++   SCROLL PROGRESS INDICATOR
++═══════════════════════════════════════ */
++(function () {
++  const bar = document.createElement("div");
++  bar.id = "scroll-progress";
++  bar.setAttribute("aria-hidden", "true");
++  document.body.appendChild(bar);
++
++  window.addEventListener("scroll", () => {
++    const scrolled = window.scrollY;
++    const maxScroll = document.body.scrollHeight - window.innerHeight;
++    const pct = maxScroll > 0 ? (scrolled / maxScroll) * 100 : 0;
++    bar.style.width = pct + "%";
++  }, { passive: true });
++})();
+ 
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

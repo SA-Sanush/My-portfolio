@@ -243,6 +243,7 @@ document
 /* BG CANVAS */
 (function () {
   const canvas = document.getElementById("bg-canvas");
+  if (!window.THREE || !canvas) return;
   const renderer = new THREE.WebGLRenderer({
     canvas,
     alpha: true,
@@ -382,6 +383,7 @@ document
 /* SHOWCASE CANVAS */
 (function () {
   const canvas = document.getElementById("showcase-canvas");
+  if (!window.THREE || !canvas) return;
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
   const renderer = new THREE.WebGLRenderer({
@@ -1301,16 +1303,7 @@ document.head.appendChild(style);
   
   spySections.forEach(sec => spyObserver.observe(sec));
 
-  // 4. Floating Resume Button (CV FAB)
-  const resumeFab = document.getElementById("resume-fab");
-  window.addEventListener("scroll", () => {
-    if (!resumeFab) return;
-    if (window.scrollY > 500) {
-      resumeFab.classList.add("show");
-    } else {
-      resumeFab.classList.remove("show");
-    }
-  }, { passive: true });
+  // 4. Floating Resume Button (CV FAB) - Always visible, handled by CSS
 
   // 5. Contact Form Submission
   window.handleFormSubmit = function() {
@@ -1366,7 +1359,7 @@ document.head.appendChild(style);
   const previewPrice = document.querySelector(".travel-preview-card .p-price");
   
   const travelData = {
-    "Kerala": { bg: "linear-gradient(135deg, #FF9F00, #FFE000)", loc: "Exploring Kerala, IN", price: "$299/day" },
+    "Kerala": { bgAccent: true, loc: "Exploring Kerala, IN", price: "$299/day" },
     "Pune": { bg: "linear-gradient(135deg, #00C6FF, #0072FF)", loc: "Visiting Pune City, IN", price: "$199/day" },
     "Paris": { bg: "linear-gradient(135deg, #f857a6, #ff5858)", loc: "Sightseeing Paris, FR", price: "$499/day" }
   };
@@ -1380,12 +1373,28 @@ document.head.appendChild(style);
       const dest = tab.textContent.trim();
       const data = travelData[dest];
       if (data && travelVisual) {
-        travelVisual.style.background = data.bg;
+        if (data.bgAccent) {
+          const accent = getComputedStyle(document.documentElement).getPropertyValue('--y').trim() || '#ffe000';
+          const warm = `color-mix(in srgb, ${accent} 60%, #ff5500)`;
+          travelVisual.style.background = `linear-gradient(135deg, ${warm}, ${accent})`;
+        } else {
+          travelVisual.style.background = data.bg;
+        }
         if (previewLoc) previewLoc.textContent = data.loc;
         if (previewPrice) previewPrice.textContent = data.price;
       }
     });
   });
+
+  // Apply initial Kerala accent gradient
+  (function() {
+    const activeTab = document.querySelector(".t-tab.active[data-bg-accent]");
+    if (activeTab && travelVisual) {
+      const accent = getComputedStyle(document.documentElement).getPropertyValue('--y').trim() || '#ffe000';
+      const warm = `color-mix(in srgb, ${accent} 60%, #ff5500)`;
+      travelVisual.style.background = `linear-gradient(135deg, ${warm}, ${accent})`;
+    }
+  })();
 
   // 8. DayTone Mood Grid Hover Interaction
   const moodLabel = document.querySelector(".mood-label");
@@ -1486,15 +1495,29 @@ document.head.appendChild(style);
       0,0,1,2,1,0,2, 0,1,0,2,1,3,0, 1,0,2,1,0,0,2,
       0,2,1,3,0,1,0, 2,1,0,1,0,2,1, 3,0,0,2,1,0,1
     ];
-    const colors = ["#1a1a1a","rgba(255,224,0,0.15)","rgba(255,224,0,0.4)","rgba(255,224,0,0.75)","#FFE000"];
+    window._ghHeatmapActivity = activity; // store for live theme refresh
     const tooltips = ["No activity","1-2 commits","3-4 commits","5-6 commits","7+ commits"];
-    activity.forEach((level) => {
-      const cell = document.createElement("div");
-      cell.className = "gh-cell";
-      cell.style.background = colors[Math.min(level, 4)];
-      cell.title = tooltips[Math.min(level, 4)];
-      heatmap.appendChild(cell);
-    });
+    function buildHeatmapColors(accentHex) {
+      return ["#1a1a1a",
+        `color-mix(in srgb, ${accentHex} 15%, transparent)`,
+        `color-mix(in srgb, ${accentHex} 40%, transparent)`,
+        `color-mix(in srgb, ${accentHex} 75%, transparent)`,
+        accentHex];
+    }
+    function renderHeatmap(accentHex) {
+      heatmap.innerHTML = "";
+      const colors = buildHeatmapColors(accentHex);
+      activity.forEach((level) => {
+        const cell = document.createElement("div");
+        cell.className = "gh-cell";
+        cell.style.background = colors[Math.min(level, 4)];
+        cell.title = tooltips[Math.min(level, 4)];
+        heatmap.appendChild(cell);
+      });
+    }
+    const initialAccent = getComputedStyle(document.documentElement).getPropertyValue('--y').trim() || '#ffe000';
+    renderHeatmap(initialAccent);
+    window._renderHeatmap = renderHeatmap; // expose for live updates
   }
 
   /* ── 5. PROJECT MODALS ── */
@@ -1507,7 +1530,7 @@ document.head.appendChild(style);
         <div>&gt; Voice engine: Whisper STT [active]</div>
         <div>&gt; Long-term memory: ChromaDB vector DB</div>
         <div>&gt; LLM fallback chain: 9 providers</div>
-        <div style="color:#FFE000">&gt; STATUS: ONLINE ✦ All systems nominal</div>
+        <div style="color:var(--y)">&gt; STATUS: ONLINE ✦ All systems nominal</div>
       </div>`,
       desc: "A cross-platform AI desktop voice assistant that combines the power of 9 LLM APIs with ChromaDB-powered vector memory for persistent context, offline wake-word activation, and full OS-level voice control.",
       features: [
@@ -1528,8 +1551,8 @@ document.head.appendChild(style);
         <div style="font-size:13px;color:rgba(245,245,240,0.45);margin-bottom:12px">Interactive Chatbot Assistant</div>
         <div style="background:#111;border-radius:8px;padding:12px;font-size:12px;text-align:left;line-height:2">
           <div style="color:#27ae60">Visitor: "Hey, what are Sanush's skills?"</div>
-          <div style="color:#FFE000">Chatbot: "Sanush is skilled in Front End Development, UI/UX Design, and AI & Python..."</div>
-          <div style="color:#FFE000">&gt; Live Status: Online and Ready ✦</div>
+          <div style="color:var(--y)">Chatbot: "Sanush is skilled in Front End Development, UI/UX Design, and AI &amp; Python..."</div>
+          <div style="color:var(--y)">&gt; Live Status: Online and Ready ✦</div>
         </div>
       </div>`,
       desc: "A personal portfolio website built with HTML, CSS, JavaScript, and Three.js — features 3D visuals, smooth animations, and an AI-powered chatbot assistant.",
@@ -1548,9 +1571,9 @@ document.head.appendChild(style);
       visual: `<div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">
         <span style="background:rgba(0,247,255,0.7);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600">😊 Productive</span>
         <span style="background:rgba(111,207,151,0.7);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600">😌 Calm</span>
-        <span style="background:rgba(255,224,0,0.7);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600">⚡ Energetic</span>
+        <span style="background:color-mix(in srgb, var(--y) 70%, transparent);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600">⚡ Energetic</span>
         <span style="background:rgba(255,100,100,0.7);border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600">😰 Stressed</span>
-        <span style="width:100%;text-align:center;color:#FFE000;font-size:13px;margin-top:8px">Burnout risk: LOW — Keep it up! ✦</span>
+        <span style="width:100%;text-align:center;color:var(--y);font-size:13px;margin-top:8px">Burnout risk: LOW — Keep it up! ✦</span>
       </div>`,
       desc: "An AI-driven wellness assistant using ensemble ML models (Random Forest, Decision Trees) and VADER sentiment analytics to track daily mental health logs, predict burnout levels, and generate actionable analytics reports.",
       features: [
@@ -1569,10 +1592,10 @@ document.head.appendChild(style);
       visual: `<div style="text-align:center">
         <div style="font-size:13px;color:rgba(245,245,240,0.45);margin-bottom:12px">Resume Matching Engine</div>
         <div style="background:#111;border-radius:8px;padding:12px;font-size:12px;text-align:left;line-height:2">
-          <div style="color:#FFE000">📄 resume_sanush.pdf → Parsing...</div>
+          <div style="color:var(--y)">📄 resume_sanush.pdf → Parsing...</div>
           <div style="color:#27ae60">✓ Skills extracted: [Python, React, Flask, SQL]</div>
           <div style="color:#27ae60">✓ Experience: 2 years</div>
-          <div style="color:#FFE000">⚡ JD Match Score: <b style="font-size:16px">92%</b></div>
+          <div style="color:var(--y)">⚡ JD Match Score: <b style="font-size:16px">92%</b></div>
         </div>
       </div>`,
       desc: "An intelligent recruitment matching dashboard that automatically parses PDF and Word resumes using spaCy NLP, extracts core tech skills, and ranks candidate compatibility scores against target job descriptions.",
@@ -1642,7 +1665,7 @@ document.head.appendChild(style);
     const ctx = confettiCanvas.getContext("2d");
     confettiCanvas.width = window.innerWidth;
     confettiCanvas.height = window.innerHeight;
-    const colors = ["#FFE000","#FF9F00","#fff","#00f7ff","#6FCF97","#FF6B6B"];
+    const colors = [window.currentAccentColor || "#FFE000", `color-mix(in srgb, ${window.currentAccentColor || "#FFE000"} 60%, #ff5500)`,"#fff","#00f7ff","#6FCF97","#FF6B6B"];
     const particles = Array.from({length: 120}, () => ({
       x: Math.random() * confettiCanvas.width,
       y: -20,
@@ -1739,15 +1762,7 @@ document.head.appendChild(style);
     }, { passive: true });
   }
 
-  /* ── 11. Resume FAB pulse when visible ── */
-  const fab = document.getElementById("resume-fab");
-  if (fab) {
-    setInterval(() => {
-      if (!fab.classList.contains("show")) return;
-      fab.style.boxShadow = "0 0 0 10px rgba(255,224,0,0.12), 0 8px 32px rgba(0,0,0,0.5)";
-      setTimeout(() => { fab.style.boxShadow = ""; }, 700);
-    }, 3500);
-  }
+  /* ── 11. Resume FAB pulse - handled by CSS animation ── */
 
   /* ── 12. Section entrance counter animation for GitHub stats ── */
   const ghStatNums = document.querySelectorAll(".gh-stat-num");
@@ -1781,219 +1796,6 @@ document.head.appendChild(style);
     });
   }
 
-  /* ── 14. Accent Theme Switcher Logic ── */
-  window.setAccentColor = function(colorHex) {
-    window.currentAccentColor = colorHex;
-    document.documentElement.style.setProperty('--y', colorHex);
-    localStorage.setItem("sanush-accent-color", colorHex);
-    
-    document.querySelectorAll(".theme-dot").forEach(btn => {
-      btn.classList.toggle("active", btn.dataset.color === colorHex);
-    });
-    
-    // Update Simpleicons SVG colors dynamically to match theme accent
-    const cleanHex = colorHex.replace("#", "").toUpperCase();
-    document.querySelectorAll("img").forEach(img => {
-      const src = img.getAttribute("src");
-      if (src && src.includes("cdn.simpleicons.org")) {
-        const newSrc = src.replace(/cdn\.simpleicons\.org\/([^\/]+)\/([A-Fa-f0-9]{6})/i, `cdn.simpleicons.org/$1/${cleanHex}`);
-        img.setAttribute("src", newSrc);
-      }
-    });
-
-    if (window.THREE && Array.isArray(window.accentMaterials)) {
-      const threeColor = new THREE.Color(colorHex);
-      window.accentMaterials.forEach(obj => {
-        if (!obj) return;
-        if (obj.isMaterial) {
-          obj.color.copy(threeColor);
-          if (obj.emissive && typeof obj.emissive.copy === "function") {
-            obj.emissive.copy(threeColor);
-          }
-        } else if (obj.isLight) {
-          obj.color.copy(threeColor);
-        }
-      });
-    }
-  };
-
-  const themeSelector = document.getElementById("theme-selector");
-  if (themeSelector) {
-    themeSelector.querySelectorAll(".theme-dot").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const color = btn.dataset.color;
-        window.setAccentColor(color);
-      });
-      btn.addEventListener("mouseenter", () => {
-        const curRing = document.getElementById("cur-ring");
-        if (curRing) curRing.classList.add("big");
-      });
-      btn.addEventListener("mouseleave", () => {
-        const curRing = document.getElementById("cur-ring");
-        if (curRing) curRing.classList.remove("big");
-      });
-    });
-  }
-
-  const savedColor = localStorage.getItem("sanush-accent-color");
-  if (savedColor) {
-    setTimeout(() => {
-      window.setAccentColor(savedColor);
-    }, 800);
-  }
-
-  /* ── 15. Command Palette Modal Logic ── */
-  const cmdOverlay = document.getElementById("cmd-palette");
-  const cmdSearch = document.getElementById("cmd-search");
-  const cmdResults = document.getElementById("cmd-results");
-  let cmdActiveIndex = 0;
-  let currentFilteredCommands = [];
-
-  const commandsList = [
-    { key: "top", title: "Home — Scroll to Top", desc: "Navigate to the hero section", shortcut: "H", action: () => scrollToId("hero") },
-    { key: "about", title: "About — Who I Am", desc: "Navigate to the about me section", shortcut: "A", action: () => scrollToId("about") },
-    { key: "skills", title: "Skills — Technical Stack", desc: "Navigate to the skills grid", shortcut: "S", action: () => scrollToId("skills") },
-    { key: "projects", title: "Projects — Featured Works", desc: "Navigate to my portfolio projects", shortcut: "P", action: () => scrollToId("projects") },
-    { key: "github", title: "GitHub — Open Source Activity", desc: "Navigate to my contribution heatmap & repos", shortcut: "G", action: () => scrollToId("github-activity") },
-    { key: "education", title: "Education — Timeline", desc: "Navigate to my academic history", shortcut: "E", action: () => scrollToId("education") },
-    { key: "certifications", title: "Certificates — Credentials", desc: "Navigate to my verified licenses & certifications", shortcut: "C", action: () => scrollToId("certifications") },
-    { key: "contact", title: "Contact — Let's Talk", desc: "Navigate to the contact form & socials", shortcut: "M", action: () => scrollToId("contact") },
-    { key: "resume", title: "Resume — View PDF", desc: "Open resume in a new browser tab", shortcut: "R", action: () => window.open("./Sanush%20Resume.pdf", "_blank") },
-    { key: "chatbot", title: "Chatbot — Open AI Assistant", desc: "Toggle the chat assistant overlay window", shortcut: "T", action: () => triggerChatbot() },
-    { key: "theme-gold", title: "Theme — Accent: Gold", desc: "Switch accents to default yellow", shortcut: "T1", action: () => window.setAccentColor("#ffe000") },
-    { key: "theme-cyan", title: "Theme — Accent: Neon Cyan", desc: "Switch accents to high-tech cyan", shortcut: "T2", action: () => window.setAccentColor("#00f7ff") },
-    { key: "theme-green", title: "Theme — Accent: Emerald Green", desc: "Switch accents to minty emerald", shortcut: "T3", action: () => window.setAccentColor("#39ff14") },
-    { key: "theme-pink", title: "Theme — Accent: Neon Pink", desc: "Switch accents to magenta pink", shortcut: "T4", action: () => window.setAccentColor("#ff007f") },
-    { key: "theme-purple", title: "Theme — Accent: Deep Purple", desc: "Switch accents to cyber purple", shortcut: "T5", action: () => window.setAccentColor("#9b5de5") }
-  ];
-
-  function scrollToId(id) {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-    closeCmdPalette();
-  }
-
-  function triggerChatbot() {
-    const chatTrigger = document.getElementById("chat-trigger");
-    if (chatTrigger) chatTrigger.click();
-    closeCmdPalette();
-  }
-
-  function openCmdPalette() {
-    if (!cmdOverlay) return;
-    cmdOverlay.classList.add("open");
-    document.body.style.overflow = "hidden";
-    cmdSearch.value = "";
-    cmdSearch.focus();
-    renderCommands("");
-    
-    const curRing = document.getElementById("cur-ring");
-    if (curRing) curRing.classList.add("big");
-  }
-
-  function closeCmdPalette() {
-    if (!cmdOverlay) return;
-    cmdOverlay.classList.remove("open");
-    document.body.style.overflow = "";
-    
-    const curRing = document.getElementById("cur-ring");
-    if (curRing) curRing.classList.remove("big");
-  }
-
-  function renderCommands(query) {
-    if (!cmdResults) return;
-    cmdResults.innerHTML = "";
-    const filtered = commandsList.filter(cmd => 
-      cmd.title.toLowerCase().includes(query.toLowerCase()) || 
-      cmd.desc.toLowerCase().includes(query.toLowerCase())
-    );
-    currentFilteredCommands = filtered;
-    cmdActiveIndex = Math.min(cmdActiveIndex, Math.max(0, filtered.length - 1));
-
-    if (filtered.length === 0) {
-      cmdResults.innerHTML = `<div style="padding:16px 20px;font-size:12px;color:var(--dim);text-align:center">No commands matching "${query}"</div>`;
-      return;
-    }
-
-    filtered.forEach((cmd, idx) => {
-      const div = document.createElement("div");
-      div.className = `cmd-item ${idx === cmdActiveIndex ? "active" : ""}`;
-      div.innerHTML = `
-        <div class="cmd-item-left">
-          <div class="cmd-item-title">${cmd.title}</div>
-          <div class="cmd-item-desc">${cmd.desc}</div>
-        </div>
-        <span class="cmd-item-shortcut">${cmd.shortcut}</span>
-      `;
-      div.addEventListener("click", () => {
-        cmd.action();
-      });
-      
-      const curRing = document.getElementById("cur-ring");
-      div.addEventListener("mouseenter", () => {
-        cmdActiveIndex = idx;
-        document.querySelectorAll(".cmd-item").forEach((el, i) => {
-          el.classList.toggle("active", i === idx);
-        });
-        if (curRing) curRing.classList.add("big");
-      });
-      div.addEventListener("mouseleave", () => {
-        if (curRing) curRing.classList.remove("big");
-      });
-
-      cmdResults.appendChild(div);
-    });
-
-    const activeItem = cmdResults.children[cmdActiveIndex];
-    if (activeItem) {
-      activeItem.scrollIntoView({ block: "nearest" });
-    }
-  }
-
-  window.addEventListener("keydown", (e) => {
-    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-      e.preventDefault();
-      if (cmdOverlay.classList.contains("open")) {
-        closeCmdPalette();
-      } else {
-        openCmdPalette();
-      }
-    }
-    
-    if (e.key === "Escape" && cmdOverlay && cmdOverlay.classList.contains("open")) {
-      closeCmdPalette();
-    }
-
-    if (cmdOverlay && cmdOverlay.classList.contains("open")) {
-      if (e.key === "ArrowDown") {
-        e.preventDefault();
-        cmdActiveIndex = (cmdActiveIndex + 1) % currentFilteredCommands.length;
-        renderCommands(cmdSearch.value);
-      } else if (e.key === "ArrowUp") {
-        e.preventDefault();
-        cmdActiveIndex = (cmdActiveIndex - 1 + currentFilteredCommands.length) % currentFilteredCommands.length;
-        renderCommands(cmdSearch.value);
-      } else if (e.key === "Enter") {
-        e.preventDefault();
-        const cmd = currentFilteredCommands[cmdActiveIndex];
-        if (cmd) cmd.action();
-      }
-    }
-  });
-
-  if (cmdSearch) {
-    cmdSearch.addEventListener("input", (e) => {
-      cmdActiveIndex = 0;
-      renderCommands(e.target.value);
-    });
-  }
-
-  if (cmdOverlay) {
-    cmdOverlay.addEventListener("click", (e) => {
-      if (e.target === cmdOverlay) closeCmdPalette();
-    });
-  }
+  // Command palette moved to cmd-palette.js (standalone module)
 
 })();
