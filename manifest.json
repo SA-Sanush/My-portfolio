@@ -1,0 +1,16 @@
+{
+  "name": "S A Sanush — Portfolio",
+  "short_name": "Sanush Portfolio",
+  "description": "Personal portfolio website for S A Sanush — Front End Developer & MCA student.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#080808",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
