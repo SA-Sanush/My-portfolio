@@ -4658,43 +4658,6 @@ footer {
    NEW FEATURES ADDITIONS ( switcher, cmd+k, raycasting, chat cards )
    ══════════════════════════════════════════ */
 
-/* Accent Theme Selector */
-.theme-selector {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 6px 12px;
-  border-radius: 99px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-@media (max-width: 900px) {
-  .theme-selector {
-    display: none; /* Hide on smaller nav headers to prevent overflow */
-  }
-}
-.theme-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  cursor: none;
-  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.25s, box-shadow 0.25s;
-  padding: 0;
-  display: block;
-}
-.theme-dot:hover {
-  transform: scale(1.3);
-  border-color: rgba(255, 255, 255, 0.6);
-}
-.theme-dot.active {
-  border-color: #ffffff;
-  transform: scale(1.4);
-  box-shadow: 0 0 10px currentColor;
-}
-
 /* Command Palette Overlay */
 .cmd-overlay {
   position: fixed;
