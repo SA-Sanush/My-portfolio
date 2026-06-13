@@ -1916,14 +1916,16 @@ document.head.appendChild(style);
     }
   }
 
-  window.addEventListener("keydown", (e) => {
+  document.addEventListener("keydown", (e) => {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
       e.preventDefault();
-      if (cmdOverlay.classList.contains("open")) {
+      e.stopPropagation();
+      if (cmdOverlay && cmdOverlay.classList.contains("open")) {
         closeCmdPalette();
       } else {
         openCmdPalette();
       }
+      return;
     }
     
     if (e.key === "Escape" && cmdOverlay && cmdOverlay.classList.contains("open")) {
@@ -1946,6 +1948,12 @@ document.head.appendChild(style);
       }
     }
   });
+
+  // Nav button click
+  const cmdTriggerBtn = document.getElementById("cmd-trigger-btn");
+  if (cmdTriggerBtn) {
+    cmdTriggerBtn.addEventListener("click", () => openCmdPalette());
+  }
 
   if (cmdSearch) {
     cmdSearch.addEventListener("input", (e) => {
