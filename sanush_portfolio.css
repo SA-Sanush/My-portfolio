@@ -4798,24 +4798,26 @@ footer {
 
 /* Custom 3D hover state for cursor ring */
 #cur-ring.cur-hover-3d {
-  width: 76px !important;
-  height: 76px !important;
-  margin-left: -38px !important;
-  margin-top: -38px !important;
+  width: 88px !important;
+  height: 88px !important;
+  margin-left: -44px !important;
+  margin-top: -44px !important;
   border-color: var(--y) !important;
-  background: color-mix(in srgb, var(--y) 8%, transparent) !important;
+  background: color-mix(in srgb, var(--y) 10%, transparent) !important;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--y) 25%, transparent) !important;
 }
 #cur-ring.cur-hover-3d::after {
-  content: 'EXPLORE';
+  content: 'VIEW PROJECTS';
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 7.5px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 6.8px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   color: var(--y);
   opacity: 1;
+  white-space: nowrap;
 }
 
 /* Chatbot Rich project card visuals */
