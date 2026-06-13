@@ -1959,16 +1959,18 @@ document.head.appendChild(style);
     }
   });
 
-  // Nav button click
+  // Nav button click (handles both click and touchstart for mobile/emulator responsiveness)
   const cmdTriggerBtn = document.getElementById("cmd-trigger-btn");
   console.log("cmdTriggerBtn element found:", cmdTriggerBtn);
   if (cmdTriggerBtn) {
-    cmdTriggerBtn.addEventListener("click", (e) => {
-      console.log("cmdTriggerBtn clicked!");
+    const handleTrigger = (e) => {
+      console.log(`cmdTriggerBtn event triggered: ${e.type}`);
       e.preventDefault();
       e.stopPropagation();
       openCmdPalette();
-    });
+    };
+    cmdTriggerBtn.addEventListener("click", handleTrigger);
+    cmdTriggerBtn.addEventListener("touchstart", handleTrigger, { passive: false });
   }
 
   if (cmdSearch) {
