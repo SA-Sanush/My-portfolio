@@ -112,6 +112,9 @@ document
       opacity: 0.18,
     });
 
+    window.accentMaterials = window.accentMaterials || [];
+    window.accentMaterials.push(goldMat, lineMat, keyLight, rimLight);
+
     const sculpture = new THREE.Group();
     scene.add(sculpture);
 
@@ -260,6 +263,9 @@ document
   const pl = new THREE.PointLight(0xffe000, 1.1, 60);
   pl.position.set(5, 5, 6);
   scene.add(pl);
+  
+  window.accentMaterials = window.accentMaterials || [];
+  window.accentMaterials.push(pl);
 
   const shapes = [];
   const wmat = new THREE.MeshBasicMaterial({
@@ -288,6 +294,7 @@ document
     };
     scene.add(mesh);
     shapes.push(mesh);
+    window.accentMaterials.push(mesh.material);
   });
 
   const tmat = new THREE.MeshBasicMaterial({
@@ -316,6 +323,7 @@ document
     };
     scene.add(ring);
     shapes.push(ring);
+    window.accentMaterials.push(ring.material);
   });
 
   const dustGeo = new THREE.BufferGeometry();
@@ -924,6 +932,38 @@ document
     isDragging = false;
   });
 
+  // Raycasting Setup for 3D Interactions
+  const raycaster = new THREE.Raycaster();
+  const rayMouse = new THREE.Vector2(-9999, -9999);
+  let hoveredObj = null;
+
+  canvas.addEventListener("mousemove", (e) => {
+    const rect = canvas.getBoundingClientRect();
+    rayMouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    rayMouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+  });
+
+  canvas.addEventListener("mouseleave", () => {
+    rayMouse.set(-9999, -9999);
+  });
+
+  canvas.addEventListener("touchstart", (e) => {
+    const touch = e.touches[0];
+    if (!touch) return;
+    const rect = canvas.getBoundingClientRect();
+    rayMouse.x = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
+    rayMouse.y = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
+  }, { passive: true });
+
+  canvas.addEventListener("click", () => {
+    if (hoveredObj) {
+      const target = document.getElementById("projects");
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  });
+
   let t = 0;
   function scRender() {
     requestAnimationFrame(scRender);
@@ -956,6 +996,40 @@ document
     cam.position.y = radius * Math.sin(phi) + cameraLift;
     cam.position.z = radius * Math.cos(theta) * Math.cos(phi);
     cam.lookAt(lookAtX, lookAtY, 0.35);
+
+    // Raycast calculations for hover interaction
+    raycaster.setFromCamera(rayMouse, cam);
+    let intersects = [];
+    if (mobileRig.visible) {
+      intersects = raycaster.intersectObject(phoneScreen);
+    } else {
+      intersects = raycaster.intersectObject(monitorScreen);
+    }
+
+    const curRing = document.getElementById("cur-ring");
+    if (intersects.length > 0) {
+      hoveredObj = intersects[0].object;
+      if (curRing) {
+        curRing.classList.add("cur-hover-3d");
+      }
+      if (mobileRig.visible) {
+        phoneScreen.material.color.setHex(0xffffff);
+      } else {
+        monitorScreen.material.color.setHex(0xffffff);
+      }
+    } else {
+      if (hoveredObj) {
+        const accentHex = window.currentAccentColor || "#ffe000";
+        const threeColor = new THREE.Color(accentHex);
+        monitorScreen.material.color.copy(threeColor);
+        phoneScreen.material.color.copy(threeColor);
+        hoveredObj = null;
+      }
+      if (curRing) {
+        curRing.classList.remove("cur-hover-3d");
+      }
+    }
+
     renderer.render(scene, cam);
   }
   scRender();
@@ -967,6 +1041,31 @@ document
     cam.aspect = w / h;
     cam.updateProjectionMatrix();
     setShowcaseView();
+  });
+
+  // Traverse and collect all yellow/gold/accent materials in showcase scene
+  window.accentMaterials = window.accentMaterials || [];
+  scene.traverse(node => {
+    if (node.isMesh && node.material) {
+      const mats = Array.isArray(node.material) ? node.material : [node.material];
+      mats.forEach(mat => {
+        if (mat.color) {
+          const hex = mat.color.getHex();
+          if (hex === 0xffe000 || hex === 0xe2ba17 || hex === 0xe0bb18 || hex === 0x8f7d0c || hex === 0xffd24a || hex === 0xffd54d) {
+            if (!window.accentMaterials.includes(mat)) {
+              window.accentMaterials.push(mat);
+            }
+          }
+        }
+      });
+    } else if (node.isLight) {
+      const hex = node.color.getHex();
+      if (hex === 0xffe000 || hex === 0xffd24a || hex === 0xffd54d) {
+        if (!window.accentMaterials.includes(node)) {
+          window.accentMaterials.push(node);
+        }
+      }
+    }
   });
 })();
 
@@ -1672,5 +1771,219 @@ document.head.appendChild(style);
     });
   }, { threshold: 0.5 });
   ghStatNums.forEach(el => ghStatObserver.observe(el));
+
+  /* ── 13. PWA Service Worker Registration ── */
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js")
+        .then(reg => console.log("Service Worker registered successfully:", reg.scope))
+        .catch(err => console.warn("Service Worker registration failed:", err));
+    });
+  }
+
+  /* ── 14. Accent Theme Switcher Logic ── */
+  window.setAccentColor = function(colorHex) {
+    window.currentAccentColor = colorHex;
+    document.documentElement.style.setProperty('--y', colorHex);
+    localStorage.setItem("sanush-accent-color", colorHex);
+    
+    document.querySelectorAll(".theme-dot").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.color === colorHex);
+    });
+    
+    if (window.THREE && Array.isArray(window.accentMaterials)) {
+      const threeColor = new THREE.Color(colorHex);
+      window.accentMaterials.forEach(obj => {
+        if (!obj) return;
+        if (obj.isMaterial) {
+          obj.color.copy(threeColor);
+          if (obj.emissive && typeof obj.emissive.copy === "function") {
+            obj.emissive.copy(threeColor);
+          }
+        } else if (obj.isLight) {
+          obj.color.copy(threeColor);
+        }
+      });
+    }
+  };
+
+  const themeSelector = document.getElementById("theme-selector");
+  if (themeSelector) {
+    themeSelector.querySelectorAll(".theme-dot").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const color = btn.dataset.color;
+        window.setAccentColor(color);
+      });
+      btn.addEventListener("mouseenter", () => {
+        const curRing = document.getElementById("cur-ring");
+        if (curRing) curRing.classList.add("big");
+      });
+      btn.addEventListener("mouseleave", () => {
+        const curRing = document.getElementById("cur-ring");
+        if (curRing) curRing.classList.remove("big");
+      });
+    });
+  }
+
+  const savedColor = localStorage.getItem("sanush-accent-color");
+  if (savedColor) {
+    setTimeout(() => {
+      window.setAccentColor(savedColor);
+    }, 800);
+  }
+
+  /* ── 15. Command Palette Modal Logic ── */
+  const cmdOverlay = document.getElementById("cmd-palette");
+  const cmdSearch = document.getElementById("cmd-search");
+  const cmdResults = document.getElementById("cmd-results");
+  let cmdActiveIndex = 0;
+  let currentFilteredCommands = [];
+
+  const commandsList = [
+    { key: "top", title: "Home — Scroll to Top", desc: "Navigate to the hero section", shortcut: "H", action: () => scrollToId("hero") },
+    { key: "about", title: "About — Who I Am", desc: "Navigate to the about me section", shortcut: "A", action: () => scrollToId("about") },
+    { key: "skills", title: "Skills — Technical Stack", desc: "Navigate to the skills grid", shortcut: "S", action: () => scrollToId("skills") },
+    { key: "projects", title: "Projects — Featured Works", desc: "Navigate to my portfolio projects", shortcut: "P", action: () => scrollToId("projects") },
+    { key: "github", title: "GitHub — Open Source Activity", desc: "Navigate to my contribution heatmap & repos", shortcut: "G", action: () => scrollToId("github-activity") },
+    { key: "education", title: "Education — Timeline", desc: "Navigate to my academic history", shortcut: "E", action: () => scrollToId("education") },
+    { key: "certifications", title: "Certificates — Credentials", desc: "Navigate to my verified licenses & certifications", shortcut: "C", action: () => scrollToId("certifications") },
+    { key: "contact", title: "Contact — Let's Talk", desc: "Navigate to the contact form & socials", shortcut: "M", action: () => scrollToId("contact") },
+    { key: "resume", title: "Resume — View PDF", desc: "Open resume in a new browser tab", shortcut: "R", action: () => window.open("./Sanush%20Resume.pdf", "_blank") },
+    { key: "chatbot", title: "Chatbot — Open AI Assistant", desc: "Toggle the chat assistant overlay window", shortcut: "T", action: () => triggerChatbot() },
+    { key: "theme-gold", title: "Theme — Accent: Gold", desc: "Switch accents to default yellow", shortcut: "T1", action: () => window.setAccentColor("#ffe000") },
+    { key: "theme-cyan", title: "Theme — Accent: Neon Cyan", desc: "Switch accents to high-tech cyan", shortcut: "T2", action: () => window.setAccentColor("#00f7ff") },
+    { key: "theme-green", title: "Theme — Accent: Emerald Green", desc: "Switch accents to minty emerald", shortcut: "T3", action: () => window.setAccentColor("#39ff14") },
+    { key: "theme-pink", title: "Theme — Accent: Neon Pink", desc: "Switch accents to magenta pink", shortcut: "T4", action: () => window.setAccentColor("#ff007f") },
+    { key: "theme-purple", title: "Theme — Accent: Deep Purple", desc: "Switch accents to cyber purple", shortcut: "T5", action: () => window.setAccentColor("#9b5de5") }
+  ];
+
+  function scrollToId(id) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    closeCmdPalette();
+  }
+
+  function triggerChatbot() {
+    const chatTrigger = document.getElementById("chat-trigger");
+    if (chatTrigger) chatTrigger.click();
+    closeCmdPalette();
+  }
+
+  function openCmdPalette() {
+    if (!cmdOverlay) return;
+    cmdOverlay.classList.add("open");
+    document.body.style.overflow = "hidden";
+    cmdSearch.value = "";
+    cmdSearch.focus();
+    renderCommands("");
+    
+    const curRing = document.getElementById("cur-ring");
+    if (curRing) curRing.classList.add("big");
+  }
+
+  function closeCmdPalette() {
+    if (!cmdOverlay) return;
+    cmdOverlay.classList.remove("open");
+    document.body.style.overflow = "";
+    
+    const curRing = document.getElementById("cur-ring");
+    if (curRing) curRing.classList.remove("big");
+  }
+
+  function renderCommands(query) {
+    if (!cmdResults) return;
+    cmdResults.innerHTML = "";
+    const filtered = commandsList.filter(cmd => 
+      cmd.title.toLowerCase().includes(query.toLowerCase()) || 
+      cmd.desc.toLowerCase().includes(query.toLowerCase())
+    );
+    currentFilteredCommands = filtered;
+    cmdActiveIndex = Math.min(cmdActiveIndex, Math.max(0, filtered.length - 1));
+
+    if (filtered.length === 0) {
+      cmdResults.innerHTML = `<div style="padding:16px 20px;font-size:12px;color:var(--dim);text-align:center">No commands matching "${query}"</div>`;
+      return;
+    }
+
+    filtered.forEach((cmd, idx) => {
+      const div = document.createElement("div");
+      div.className = `cmd-item ${idx === cmdActiveIndex ? "active" : ""}`;
+      div.innerHTML = `
+        <div class="cmd-item-left">
+          <div class="cmd-item-title">${cmd.title}</div>
+          <div class="cmd-item-desc">${cmd.desc}</div>
+        </div>
+        <span class="cmd-item-shortcut">${cmd.shortcut}</span>
+      `;
+      div.addEventListener("click", () => {
+        cmd.action();
+      });
+      
+      const curRing = document.getElementById("cur-ring");
+      div.addEventListener("mouseenter", () => {
+        cmdActiveIndex = idx;
+        document.querySelectorAll(".cmd-item").forEach((el, i) => {
+          el.classList.toggle("active", i === idx);
+        });
+        if (curRing) curRing.classList.add("big");
+      });
+      div.addEventListener("mouseleave", () => {
+        if (curRing) curRing.classList.remove("big");
+      });
+
+      cmdResults.appendChild(div);
+    });
+
+    const activeItem = cmdResults.children[cmdActiveIndex];
+    if (activeItem) {
+      activeItem.scrollIntoView({ block: "nearest" });
+    }
+  }
+
+  window.addEventListener("keydown", (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+      e.preventDefault();
+      if (cmdOverlay.classList.contains("open")) {
+        closeCmdPalette();
+      } else {
+        openCmdPalette();
+      }
+    }
+    
+    if (e.key === "Escape" && cmdOverlay && cmdOverlay.classList.contains("open")) {
+      closeCmdPalette();
+    }
+
+    if (cmdOverlay && cmdOverlay.classList.contains("open")) {
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        cmdActiveIndex = (cmdActiveIndex + 1) % currentFilteredCommands.length;
+        renderCommands(cmdSearch.value);
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        cmdActiveIndex = (cmdActiveIndex - 1 + currentFilteredCommands.length) % currentFilteredCommands.length;
+        renderCommands(cmdSearch.value);
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        const cmd = currentFilteredCommands[cmdActiveIndex];
+        if (cmd) cmd.action();
+      }
+    }
+  });
+
+  if (cmdSearch) {
+    cmdSearch.addEventListener("input", (e) => {
+      cmdActiveIndex = 0;
+      renderCommands(e.target.value);
+    });
+  }
+
+  if (cmdOverlay) {
+    cmdOverlay.addEventListener("click", (e) => {
+      if (e.target === cmdOverlay) closeCmdPalette();
+    });
+  }
 
 })();

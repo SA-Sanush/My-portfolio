@@ -4653,3 +4653,258 @@ footer {
     height: 160px !important;
   }
 }
+
+/* ══════════════════════════════════════════
+   NEW FEATURES ADDITIONS ( switcher, cmd+k, raycasting, chat cards )
+   ══════════════════════════════════════════ */
+
+/* Accent Theme Selector */
+.theme-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 6px 12px;
+  border-radius: 99px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+@media (max-width: 900px) {
+  .theme-selector {
+    display: none; /* Hide on smaller nav headers to prevent overflow */
+  }
+}
+.theme-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: none;
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.25s, box-shadow 0.25s;
+  padding: 0;
+  display: block;
+}
+.theme-dot:hover {
+  transform: scale(1.3);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+.theme-dot.active {
+  border-color: #ffffff;
+  transform: scale(1.4);
+  box-shadow: 0 0 10px currentColor;
+}
+
+/* Command Palette Overlay */
+.cmd-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 8, 8, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 100001;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 15vh;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s ease;
+}
+.cmd-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.cmd-box {
+  width: 92%;
+  max-width: 600px;
+  background: rgba(15, 15, 15, 0.95);
+  border: 1px solid rgba(255, 224, 0, 0.15);
+  border-radius: 18px;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 224, 0, 0.05);
+  overflow: hidden;
+  transform: translateY(-24px) scale(0.97);
+  transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s;
+}
+.cmd-overlay.open .cmd-box {
+  transform: translateY(0) scale(1);
+}
+.cmd-header {
+  display: flex;
+  align-items: center;
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  gap: 14px;
+}
+.cmd-search-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--y);
+  flex-shrink: 0;
+}
+#cmd-search {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+}
+#cmd-search::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+.cmd-esc-tag {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--dim);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 5px;
+  letter-spacing: 0.05em;
+}
+.cmd-results {
+  max-height: 330px;
+  overflow-y: auto;
+  padding: 8px;
+}
+.cmd-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-radius: 12px;
+  cursor: none;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+}
+.cmd-item.active,
+.cmd-item:hover {
+  background: rgba(255, 224, 0, 0.08);
+  border-left-color: var(--y);
+  padding-left: 15px;
+}
+.cmd-item-left {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.cmd-item-title {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #fff;
+}
+.cmd-item-desc {
+  font-size: 11px;
+  color: var(--dim);
+}
+.cmd-item-shortcut {
+  font-size: 9.5px;
+  font-family: monospace;
+  color: var(--y);
+  background: rgba(255, 224, 0, 0.06);
+  border: 1px solid rgba(255, 224, 0, 0.18);
+  padding: 2px 6px;
+  border-radius: 5px;
+  text-transform: uppercase;
+}
+.cmd-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 10px;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* Custom 3D hover state for cursor ring */
+#cur-ring.cur-hover-3d {
+  width: 76px !important;
+  height: 76px !important;
+  margin-left: -38px !important;
+  margin-top: -38px !important;
+  border-color: var(--y) !important;
+  background: rgba(255, 224, 0, 0.08) !important;
+}
+#cur-ring.cur-hover-3d::after {
+  content: 'EXPLORE';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 7.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--y);
+  opacity: 1;
+}
+
+/* Chatbot Rich project card visuals */
+.chat-project-card {
+  margin-top: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 224, 0, 0.12);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 0.3s;
+}
+.chat-project-card:hover {
+  border-color: var(--y);
+}
+.c-proj-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 14.5px;
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+.c-proj-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.c-proj-tag {
+  font-size: 8.5px;
+  padding: 1px 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  color: var(--dim);
+}
+.c-proj-desc {
+  font-size: 11.5px;
+  color: var(--dim);
+  line-height: 1.45;
+}
+.c-proj-links {
+  display: flex;
+  gap: 12px;
+  margin-top: 2px;
+}
+.c-proj-btn {
+  font-size: 9.5px;
+  text-transform: uppercase;
+  font-family: 'Oswald', sans-serif;
+  color: var(--y);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: none;
+  font-weight: 500;
+}
+.c-proj-btn:hover {
+  color: #fff;
+}
+.c-proj-btn-arr {
+  transition: transform 0.2s;
+}
+.c-proj-btn:hover .c-proj-btn-arr {
+  transform: translate(2px, -2px);
+}

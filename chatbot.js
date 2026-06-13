@@ -100,6 +100,15 @@
     div.className = "msg-bubble bot";
     div.innerHTML = html;
     messagesEl.appendChild(div);
+
+    const curRing = document.getElementById("cur-ring");
+    if (curRing) {
+      div.querySelectorAll("a, button, .c-proj-btn").forEach(el => {
+        el.addEventListener("mouseenter", () => curRing.classList.add("big"));
+        el.addEventListener("mouseleave", () => curRing.classList.remove("big"));
+      });
+    }
+
     scrollToBottom();
   }
 
@@ -272,13 +281,58 @@
       hasPhrase(normalized, "travel") ||
       hasPhrase(normalized, "portfolio")
     ) {
-      return `Sanush has built some outstanding interactive projects! Here are the highlights:<br><br>` +
-        `🤖 <strong>J.A.R.V.I.S — AI Assistant</strong> — Desktop voice assistant using 9 LLM APIs, ChromaDB vector memory, and Whisper speech control.<br>` +
-        `📄 <strong>Talent Acquisition System</strong> — Recruiter dashboard that parses PDF resumes using spaCy NLP and scores candidate matches.<br>` +
-        `🧠 <strong>DayTone Mood Tracker</strong> — Sentiment analytics diary and burnout risk predictor running Flask and Random Forest ML.<br>` +
-        `💻 <strong>Interactive AI Portfolio</strong> — This website, featuring a 3D Three.js particle space, custom bento grids, and myself (the AI assistant!).<br>` +
-        `⛳ <strong>Sidcup Family Golf</strong> & ✈️ <strong>Travel Booking UI</strong> — Stunning responsive landing layouts with rich frontend animations.<br><br>` +
-        `You can explore details and codebase links in the Projects section! [NAV:projects]`;
+      return `Here are some of Sanush's featured interactive projects. Scroll down or click to explore:<br>` +
+        `<div class="chat-project-card">` +
+        `  <div class="c-proj-title">🤖 J.A.R.V.I.S — AI Voice Assistant</div>` +
+        `  <div class="c-proj-tags">` +
+        `    <span class="c-proj-tag">Python</span>` +
+        `    <span class="c-proj-tag">Electron</span>` +
+        `    <span class="c-proj-tag">ChromaDB</span>` +
+        `    <span class="c-proj-tag">Whisper</span>` +
+        `  </div>` +
+        `  <div class="c-proj-desc">Cross-platform voice assistant with vector memory and 9-LLM API auto-fallback.</div>` +
+        `  <div class="c-proj-links">` +
+        `    <a href="https://github.com/SA-Sanush/Jarvis-AI-Assistant" target="_blank" class="c-proj-btn">GitHub Repo <span class="c-proj-btn-arr">↗</span></a>` +
+        `  </div>` +
+        `</div>` +
+        `<div class="chat-project-card">` +
+        `  <div class="c-proj-title">📄 Talent Acquisition System</div>` +
+        `  <div class="c-proj-tags">` +
+        `    <span class="c-proj-tag">Flask</span>` +
+        `    <span class="c-proj-tag">spaCy NLP</span>` +
+        `    <span class="c-proj-tag">SQLite</span>` +
+        `    <span class="c-proj-tag">Python</span>` +
+        `  </div>` +
+        `  <div class="c-proj-desc">Recruiter matching dashboard that parses resumes and scores candidate JD matches.</div>` +
+        `  <div class="c-proj-links">` +
+        `    <a href="https://github.com/SA-Sanush/Talent-Acquisition-System" target="_blank" class="c-proj-btn">GitHub Repo <span class="c-proj-btn-arr">↗</span></a>` +
+        `  </div>` +
+        `</div>` +
+        `<div class="chat-project-card">` +
+        `  <div class="c-proj-title">🧠 DayTone Mood Tracker</div>` +
+        `  <div class="c-proj-tags">` +
+        `    <span class="c-proj-tag">Flask</span>` +
+        `    <span class="c-proj-tag">Random Forest</span>` +
+        `    <span class="c-proj-tag">VADER NLP</span>` +
+        `  </div>` +
+        `  <div class="c-proj-desc">AI wellness assistant that analyses log sentiments and predicts developer burnout.</div>` +
+        `  <div class="c-proj-links">` +
+        `    <a href="https://github.com/SA-Sanush/DayTone-Mood-Analyser" target="_blank" class="c-proj-btn">GitHub Repo <span class="c-proj-btn-arr">↗</span></a>` +
+        `  </div>` +
+        `</div>` +
+        `<div class="chat-project-card">` +
+        `  <div class="c-proj-title">💻 Interactive AI Portfolio</div>` +
+        `  <div class="c-proj-tags">` +
+        `    <span class="c-proj-tag">HTML5/CSS3</span>` +
+        `    <span class="c-proj-tag">Three.js</span>` +
+        `    <span class="c-proj-tag">Vanilla JS</span>` +
+        `  </div>` +
+        `  <div class="c-proj-desc">Personal website (this site) with 3D crystal systems, raycasted monitor, and AI chatbot.</div>` +
+        `  <div class="c-proj-links">` +
+        `    <a href="https://github.com/SA-Sanush/My-portfolio" target="_blank" class="c-proj-btn">GitHub Repo <span class="c-proj-btn-arr">↗</span></a>` +
+        `  </div>` +
+        `</div>` +
+        `[NAV:projects]`;
     }
 
     if (
