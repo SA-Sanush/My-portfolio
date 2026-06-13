@@ -1303,16 +1303,7 @@ document.head.appendChild(style);
   
   spySections.forEach(sec => spyObserver.observe(sec));
 
-  // 4. Floating Resume Button (CV FAB)
-  const resumeFab = document.getElementById("resume-fab");
-  window.addEventListener("scroll", () => {
-    if (!resumeFab) return;
-    if (window.scrollY > 500) {
-      resumeFab.classList.add("show");
-    } else {
-      resumeFab.classList.remove("show");
-    }
-  }, { passive: true });
+  // 4. Floating Resume Button (CV FAB) - Always visible, handled by CSS
 
   // 5. Contact Form Submission
   window.handleFormSubmit = function() {
@@ -1771,15 +1762,7 @@ document.head.appendChild(style);
     }, { passive: true });
   }
 
-  /* ── 11. Resume FAB pulse when visible ── */
-  const fab = document.getElementById("resume-fab");
-  if (fab) {
-    setInterval(() => {
-      if (!fab.classList.contains("show")) return;
-      fab.style.boxShadow = `0 0 0 10px color-mix(in srgb, var(--y) 12%, transparent), 0 8px 32px rgba(0,0,0,0.5)`;
-      setTimeout(() => { fab.style.boxShadow = ""; }, 700);
-    }, 3500);
-  }
+  /* ── 11. Resume FAB pulse - handled by CSS animation ── */
 
   /* ── 12. Section entrance counter animation for GitHub stats ── */
   const ghStatNums = document.querySelectorAll(".gh-stat-num");
