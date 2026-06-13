@@ -243,6 +243,7 @@ document
 /* BG CANVAS */
 (function () {
   const canvas = document.getElementById("bg-canvas");
+  if (!window.THREE || !canvas) return;
   const renderer = new THREE.WebGLRenderer({
     canvas,
     alpha: true,
@@ -382,6 +383,7 @@ document
 /* SHOWCASE CANVAS */
 (function () {
   const canvas = document.getElementById("showcase-canvas");
+  if (!window.THREE || !canvas) return;
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
   const renderer = new THREE.WebGLRenderer({
