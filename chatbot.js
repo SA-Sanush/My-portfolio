@@ -199,7 +199,7 @@
   }
 
   function handleNavCommand(text) {
-    const match = String(text || "").match(/\[NAV:([a-z]+)\]/);
+    const match = String(text || "").match(/\[NAV:([a-z-]+)\]/);
     if (!match) return String(text || "");
 
     const id = match[1];
@@ -210,7 +210,7 @@
       }, 400);
     }
 
-    return String(text).replace(/\[NAV:[a-z]+\]/g, "").trim();
+    return String(text).replace(/\[NAV:[a-z-]+\]/g, "").trim();
   }
 
   function normalizeMessage(text) {
@@ -306,7 +306,7 @@
       hasPhrase(normalized, "credential") ||
       hasPhrase(normalized, "cert")
     ) {
-      return `Sanush holds several verified credentials, including an Elite Silver NPTEL badge in Python, an Outstanding performer certificate from KASE, and internship completions at Hyphen. [NAV:certifications]`;
+      return `Sanush holds several verified credentials, including a Cloud Computing Elite certification from NPTEL (IIT Kharagpur), an Agentic AI Hackathon outstanding certification with IBM watsonx, and a Full Stack Web Development Internship from Unified Mentor. [NAV:certifications]`;
     }
 
     if (

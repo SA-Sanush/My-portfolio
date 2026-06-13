@@ -1127,47 +1127,7 @@ document.head.appendChild(style);
    PORTFOLIO ADDONS & BENTO PROJECTS LOGIC
    ══════════════════════════════════════════ */
 (function() {
-  // 1. Typewriter Hero Effect
-  const words = ["Front End Developer", "UI/UX Designer", "AI & 3D Web Enthusiast"];
-  let wordIndex = 0;
-  let charIndex = 0;
-  let isDeleting = false;
-  const targetEl = document.querySelector(".hero-eyebrow");
-
-  function typeEffect() {
-    if (!targetEl) return;
-    const currentWord = words[wordIndex];
-    const staticSuffix = "  ·  Kerala, India";
-    
-    if (isDeleting) {
-      charIndex--;
-    } else {
-      charIndex++;
-    }
-    
-    targetEl.innerHTML = currentWord.substring(0, charIndex) + `<span class="type-cursor" style="color: var(--y); animation: blink 0.8s infinite;">|</span>` + staticSuffix;
-    
-    let speed = isDeleting ? 40 : 80;
-    
-    if (!isDeleting && charIndex === currentWord.length) {
-      speed = 2200; // Pause at end
-      isDeleting = true;
-    } else if (isDeleting && charIndex === 0) {
-      isDeleting = false;
-      wordIndex = (wordIndex + 1) % words.length;
-      speed = 400; // Pause before next word
-    }
-    
-    setTimeout(typeEffect, speed);
-  }
-  
-  // Inject cursor keyframe animation
-  const cursorStyle = document.createElement("style");
-  cursorStyle.textContent = `@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }`;
-  document.head.appendChild(cursorStyle);
-  
-  // Start typing effect
-  typeEffect();
+  // 1. Typewriter Hero Effect (Disabled to prevent clutter with main hero typing loop)
 
   // 2. Animated Stats Counter
   const stats = document.querySelectorAll(".stat-num");
