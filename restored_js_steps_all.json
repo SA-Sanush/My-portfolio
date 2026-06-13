@@ -1,0 +1,167 @@
+[
+  {
+    "step_index": 159,
+    "tool": "replace_file_content",
+    "instruction": "\"Fix text scramble function to correctly restore the full word at the end and clear previous intervals\"",
+    "chunks": [
+      {
+        "startLine": "1156",
+        "endLine": "1173",
+        "targetContent": "\"  function scramble(el) {\\n    const target = el.dataset.scramble || el.textContent;\\n    el.dataset.scramble = target;\\n    let iteration = 0;\\n    const total = target.length * 4;\\n    const iv = setInterval(() => {\\n      el.textContent = target\\n        .split(\\\"\\\")\\n        .map((char, i) => {\\n          if (char === \\\" \\\") return \\\" \\\";\\n          if (i < Math.floor(iteration / 4)) return target[i];\\n          return CHARS[Math.floor(Math.random() * CHARS.length)];\\n        })\\n        .join(\\\"\\\");\\n      iteration++;\\n      if (iteration >= total) clearInterval(iv);\\n    }, 28);\\n  }\"",
+        "replacementContent": "\"  function scramble(el) {\\n    const target = el.dataset.scramble || el.textContent;\\n    el.dataset.scramble = target;\\n    if (el.scrambleInterval) {\\n      clearInterval(el.scrambleInterval);\\n    }\\n    let iteration = 0;\\n    const total = target.length * 4;\\n    el.scrambleInterval = setInterval(() => {\\n      if (iteration >= total) {\\n        el.textContent = target;\\n        clearInterval(el.scrambleInterval);\\n        el.scrambleInterval = null;\\n        return;\\n      }\\n      el.textContent = target\\n        .split(\\\"\\\")\\n        .map((char, i) => {\\n          if (char === \\\" \\\") return \\\" \\\";\\n          if (i < Math.floor(iteration / 4)) return target[i];\\n          return CHARS[Math.floor(Math.random() * CHARS.length)];\\n        })\\n        .join(\\\"\\\");\\n      iteration++;\\n    }, 28);\\n  }\""
+      }
+    ]
+  },
+  {
+    "step_index": 183,
+    "tool": "replace_file_content",
+    "instruction": "\"Replace the scroll progress indicator block with new Back-to-Top progress logic\"",
+    "chunks": [
+      {
+        "startLine": "1268",
+        "endLine": "1283",
+        "targetContent": "\"/* ═══════════════════════════════════════\\n   SCROLL PROGRESS INDICATOR\\n   ═══════════════════════════════════════ */\\n(function () {\\n  const bar = document.createElement(\\\"div\\\");\\n  bar.id = \\\"scroll-progress\\\";\\n  bar.setAttribute(\\\"aria-hidden\\\", \\\"true\\\");\\n  document.body.appendChild(bar);\\n\\n  window.addEventListener(\\\"scroll\\\", () => {\\n    const scrolled = window.scrollY;\\n    const maxScroll = document.body.scrollHeight - window.innerHeight;\\n    const pct = maxScroll > 0 ? (scrolled / maxScroll) * 100 : 0;\\n    bar.style.width = pct + \\\"%\\\";\\n  }, { passive: true });\\n})();\"",
+        "replacementContent": "\"/* ═══════════════════════════════════════\\n   SCROLL PROGRESS & BACK TO TOP PROGRESS\\n   ═══════════════════════════════════════ */\\n(function () {\\n  const bar = document.createElement(\\\"div\\\");\\n  bar.id = \\\"scroll-progress\\\";\\n  bar.setAttribute(\\\"aria-hidden\\\", \\\"true\\\");\\n  document.body.appendChild(bar);\\n\\n  const btt = document.getElementById(\\\"back-to-top\\\");\\n  const circle = document.querySelector(\\\".progress-ring__circle\\\");\\n  let circumference = 0;\\n\\n  if (circle) {\\n    const radius = circle.r.baseVal.value;\\n    circumference = 2 * Math.PI * radius;\\n    circle.style.strokeDasharray = `${circumference} ${circumference}`;\\n    circle.style.strokeDashoffset = circumference;\\n  }\\n\\n  window.addEventListener(\\\"scroll\\\", () => {\\n    const scrolled = window.scrollY;\\n    const maxScroll = document.body.scrollHeight - window.innerHeight;\\n    const pct = maxScroll > 0 ? scrolled / maxScroll : 0;\\n    \\n    // Horizontal progress bar\\n    bar.style.width = (pct * 100) + \\\"%\\\";\\n\\n    // Circular progress button\\n    if (circle) {\\n      const offset = circumference - pct * circumference;\\n      circle.style.strokeDashoffset = offset;\\n    }\\n\\n    if (scrolled > 300) {\\n      if (btt) btt.classList.add(\\\"show\\\");\\n    } else {\\n      if (btt) btt.classList.remove(\\\"show\\\");\\n    }\\n  }, { passive: true });\\n\\n  if (btt) {\\n    btt.addEventListener(\\\"click\\\", () => {\\n      window.scrollTo({ top: 0, behavior: \\\"smooth\\\" });\\n    });\\n  }\\n})();\""
+      }
+    ]
+  },
+  {
+    "step_index": 187,
+    "tool": "replace_file_content",
+    "instruction": "\"Update the scroll progress indicator block with the new Back-to-Top circular logic\"",
+    "chunks": [
+      {
+        "startLine": "1268",
+        "endLine": "1284",
+        "targetContent": "\"/* ═══════════════════════════════════════\\n   SCROLL PROGRESS INDICATOR\\n   ═══════════════════════════════════════ */\\n(function () {\\n  const bar = document.createElement(\\\"div\\\");\\n  bar.id = \\\"scroll-progress\\\";\\n  bar.setAttribute(\\\"aria-hidden\\\", \\\"true\\\");\\n  document.body.appendChild(bar);\\n\\n  window.addEventListener(\\\"scroll\\\", () => {\\n    const scrolled = window.scrollY;\\n    const maxScroll = document.body.scrollHeight - window.innerHeight;\\n    const pct = maxScroll > 0 ? (scrolled / maxScroll) * 100 : 0;\\n    bar.style.width = pct + \\\"%\\\";\\n  }, { passive: true });\\n})();\"",
+        "replacementContent": "\"/* ═══════════════════════════════════════\\n   SCROLL PROGRESS & BACK TO TOP PROGRESS\\n   ═══════════════════════════════════════ */\\n(function () {\\n  const bar = document.createElement(\\\"div\\\");\\n  bar.id = \\\"scroll-progress\\\";\\n  bar.setAttribute(\\\"aria-hidden\\\", \\\"true\\\");\\n  document.body.appendChild(bar);\\n\\n  const btt = document.getElementById(\\\"back-to-top\\\");\\n  const circle = document.querySelector(\\\".progress-ring__circle\\\");\\n  let circumference = 0;\\n\\n  if (circle) {\\n    const radius = circle.r.baseVal.value;\\n    circumference = 2 * Math.PI * radius;\\n    circle.style.strokeDasharray = `${circumference} ${circumference}`;\\n    circle.style.strokeDashoffset = circumference;\\n  }\\n\\n  window.addEventListener(\\\"scroll\\\", () => {\\n    const scrolled = window.scrollY;\\n    const maxScroll = document.body.scrollHeight - window.innerHeight;\\n    const pct = maxScroll > 0 ? scrolled / maxScroll : 0;\\n    \\n    // Horizontal progress bar\\n    bar.style.width = (pct * 100) + \\\"%\\\";\\n\\n    // Circular progress button\\n    if (circle) {\\n      const offset = circumference - pct * circumference;\\n      circle.style.strokeDashoffset = offset;\\n    }\\n\\n    if (scrolled > 300) {\\n      if (btt) btt.classList.add(\\\"show\\\");\\n    } else {\\n      if (btt) btt.classList.remove(\\\"show\\\");\\n    }\\n  }, { passive: true });\\n\\n  if (btt) {\\n    btt.addEventListener(\\\"click\\\", () => {\\n      window.scrollTo({ top: 0, behavior: \\\"smooth\\\" });\\n    });\\n  }\\n})();\""
+      }
+    ]
+  },
+  {
+    "step_index": 189,
+    "tool": "replace_file_content",
+    "instruction": "\"Replace the scroll progress indicator function block\"",
+    "chunks": [
+      {
+        "startLine": "1271",
+        "endLine": "1283",
+        "targetContent": "\"(function () {\\n  const bar = document.createElement(\\\"div\\\");\\n  bar.id = \\\"scroll-progress\\\";\\n  bar.setAttribute(\\\"aria-hidden\\\", \\\"true\\\");\\n  document.body.appendChild(bar);\\n\\n  window.addEventListener(\\\"scroll\\\", () => {\\n    const scrolled = window.scrollY;\\n    const maxScroll = document.body.scrollHeight - window.innerHeight;\\n    const pct = maxScroll > 0 ? (scrolled / maxScroll) * 100 : 0;\\n    bar.style.width = pct + \\\"%\\\";\\n  }, { passive: true });\\n})();\"",
+        "replacementContent": "\"(function () {\\n  const bar = document.createElement(\\\"div\\\");\\n  bar.id = \\\"scroll-progress\\\";\\n  bar.setAttribute(\\\"aria-hidden\\\", \\\"true\\\");\\n  document.body.appendChild(bar);\\n\\n  const btt = document.getElementById(\\\"back-to-top\\\");\\n  const circle = document.querySelector(\\\".progress-ring__circle\\\");\\n  let circumference = 0;\\n\\n  if (circle) {\\n    const radius = circle.r.baseVal.value;\\n    circumference = 2 * Math.PI * radius;\\n    circle.style.strokeDasharray = `${circumference} ${circumference}`;\\n    circle.style.strokeDashoffset = circumference;\\n  }\\n\\n  window.addEventListener(\\\"scroll\\\", () => {\\n    const scrolled = window.scrollY;\\n    const maxScroll = document.body.scrollHeight - window.innerHeight;\\n    const pct = maxScroll > 0 ? scrolled / maxScroll : 0;\\n    \\n    // Horizontal progress bar\\n    bar.style.width = (pct * 100) + \\\"%\\\";\\n\\n    // Circular progress button\\n    if (circle) {\\n      const offset = circumference - pct * circumference;\\n      circle.style.strokeDashoffset = offset;\\n    }\\n\\n    if (scrolled > 300) {\\n      if (btt) btt.classList.add(\\\"show\\\");\\n    } else {\\n      if (btt) btt.classList.remove(\\\"show\\\");\\n    }\\n  }, { passive: true });\\n\\n  if (btt) {\\n    btt.addEventListener(\\\"click\\\", () => {\\n      window.scrollTo({ top: 0, behavior: \\\"smooth\\\" });\\n    });\\n  }\\n})();\""
+      }
+    ]
+  },
+  {
+    "step_index": 217,
+    "tool": "replace_file_content",
+    "instruction": "\"Add project hover hooks to cursor text binding list\"",
+    "chunks": [
+      {
+        "startLine": "52",
+        "endLine": "58",
+        "targetContent": "\"// Bind custom hover states\\nbindCursorTxt(\\\"a[href^='mailto:'], .cta-btn-overlay\\\", \\\"TALK\\\");\\nbindCursorTxt(\\\".resume-cta\\\", \\\"VIEW\\\");\\nbindCursorTxt(\\\"#showcase-canvas\\\", \\\"DRAG\\\");\\nbindCursorTxt(\\\".sk-card\\\", \\\"TILT\\\");\\nbindCursorTxt(\\\".filter-btn\\\", \\\"SORT\\\");\\nbindCursorTxt(\\\"nav a, footer a, button:not(#chat-trigger, #back-to-top), .soc-btn\\\", \\\"GO\\\");\"",
+        "replacementContent": "\"// Bind custom hover states\\nbindCursorTxt(\\\"a[href^='mailto:'], .cta-btn-overlay\\\", \\\"TALK\\\");\\nbindCursorTxt(\\\".resume-cta, .proj-btn-view\\\", \\\"VIEW\\\");\\nbindCursorTxt(\\\"#showcase-canvas\\\", \\\"DRAG\\\");\\nbindCursorTxt(\\\".sk-card\\\", \\\"TILT\\\");\\nbindCursorTxt(\\\".filter-btn\\\", \\\"SORT\\\");\\nbindCursorTxt(\\\".proj-link-git\\\", \\\"REPO\\\");\\nbindCursorTxt(\\\"nav a, footer a, button:not(#chat-trigger, #back-to-top, .proj-btn-view), .soc-btn, .proj-modal-close\\\", \\\"GO\\\");\""
+      }
+    ]
+  },
+  {
+    "step_index": 219,
+    "tool": "replace_file_content",
+    "instruction": "\"Append projects modal triggers, project details database, and scrollspy observer to the end of the file\"",
+    "chunks": [
+      {
+        "startLine": "1309",
+        "endLine": "1315",
+        "targetContent": "\"  if (btt) {\\n    btt.addEventListener(\\\"click\\\", () => {\\n      window.scrollTo({ top: 0, behavior: \\\"smooth\\\" });\\n    });\\n  }\\n})();\"",
+        "replacementContent": "\"  if (btt) {\\n    btt.addEventListener(\\\"click\\\", () => {\\n      window.scrollTo({ top: 0, behavior: \\\"smooth\\\" });\\n    });\\n  }\\n})();\\n\\n/* ═══════════════════════════════════════\\n   PROJECTS DETAILS DATABASE\\n   ═══════════════════════════════════════ */\\nconst projectData = {\\n  aetheria: {\\n    title: \\\"Aetheria AI Chatbot\\\",\\n    badge: \\\"AI Assistant\\\",\\n    desc: \\\"A smart glassmorphic assistant embedded directly into web portfolios, offering contextual knowledge, layout navigation commands, and keyboard trap focus management.\\\",\\n    features: [\\n      \\\"Integrated OpenAI GPT-4o-mini and Gemini 2.5 API backends with safe-fail local mock responses.\\\",\\n      \\\"Fully accessible dialog window featuring keyboard trapping and closing via the Escape key.\\\",\\n      \\\"Interactive layout navigation hooks: commands like [NAV:skills] smoothly scroll visitors to target sections.\\\",\\n      \\\"Dynamic quick reply options and automatic textarea vertical auto-resizing.\\\"\\n    ],\\n    links: {\\n      git: \\\"https://github.com/SA-Sanush\\\",\\n      live: \\\"#\\\"\\n    }\\n  },\\n  apex: {\\n    title: \\\"Apex 3D Workspace\\\",\\n    badge: \\\"3D WebGL\\\",\\n    desc: \\\"An interactive virtual developer room containing custom materials, lighting configurations, orbit drag listeners, and scroll-to-zoom camera physics.\\\",\\n    features: [\\n      \\\"Built with vanilla Three.js WebGL and custom lighting setups (ambient, rim, directional shadows).\\\",\\n      \\\"Fully responsive canvas recalculations across mobile and tablet viewport breaks.\\\",\\n      \\\"Custom orbital drag physics and scroll-driven scale bindings for interactive workspace elements.\\\",\\n      \\\"Intersection observers that pause the render animation frame loop when scrolled off-screen.\\\"\\n    ],\\n    links: {\\n      git: \\\"https://github.com/SA-Sanush\\\",\\n      live: \\\"#\\\"\\n    }\\n  },\\n  horizon: {\\n    title: \\\"Horizon Dashbo\n<truncated 5112 bytes>"
+      }
+    ]
+  },
+  {
+    "step_index": 507,
+    "tool": "replace_file_content",
+    "instruction": "\"Replace IntersectionObserver setup with debounced handler and add debounce function\"",
+    "chunks": [
+      {
+        "startLine": "1475",
+        "endLine": "1499",
+        "replacementContent": "\"(function () {\\n  const sections = document.querySelectorAll(\\\"section[id], #hero, #showcase\\\");\\n  const navLinks = document.querySelectorAll(\\\".nav-link, .nav-home\\\");\\n  if (!sections.length || !navLinks.length) return;\\n\\n  // Debounce utility\\n  function debounce(func, wait) {\\n    let timeout;\\n    return function (...args) {\\n      const later = () => func.apply(this, args);\\n      clearTimeout(timeout);\\n      timeout = setTimeout(later, wait);\\n    };\\n  }\\n\\n  const handleIntersect = (entries) => {\\n    entries.forEach((entry) => {\\n      if (entry.isIntersecting) {\\n        const id = entry.target.getAttribute(\\\"id\\\");\\n        if (!id) return;\\n        navLinks.forEach((link) => {\\n          const href = link.getAttribute(\\\"href\\\");\\n          if (href === `#${id}`) {\\n            link.classList.add(\\\"active\\\");\\n          } else {\\n            link.classList.remove(\\\"active\\\");\\n          }\\n        });\\n      }\\n    });\\n  };\\n\\n  const debouncedHandle = debounce(handleIntersect, 100);\\n\\n  const spyObs = new IntersectionObserver(debouncedHandle, {\\n    rootMargin: \\\"-25% 0px -65% 0px\\\",\\n    threshold: 0,\\n  });\\n\\n  sections.forEach((sec) => spyObs.observe(sec));\\n})();\""
+      }
+    ]
+  },
+  {
+    "step_index": 517,
+    "tool": "replace_file_content",
+    "instruction": "\"Replace scroll-spy block with debounced version\"",
+    "chunks": [
+      {
+        "startLine": "1475",
+        "endLine": "1499",
+        "replacementContent": "\"  // Debounce utility\\n  function debounce(func, wait) {\\n    let timeout;\\n    return function (...args) {\\n      const later = () => func.apply(this, args);\\n      clearTimeout(timeout);\\n      timeout = setTimeout(later, wait);\\n    };\\n  }\\n\\n  const handleIntersect = (entries) => {\\n    entries.forEach((entry) => {\\n      if (entry.isIntersecting) {\\n        const id = entry.target.getAttribute(\\\"id\\\");\\n        if (!id) return;\\n        navLinks.forEach((link) => {\\n          const href = link.getAttribute(\\\"href\\\");\\n          if (href === `#${id}`) {\\n            link.classList.add(\\\"active\\\");\\n          } else {\\n            link.classList.remove(\\\"active\\\");\\n          }\\n        });\\n      }\\n    });\\n  };\\n\\n  const debouncedHandle = debounce(handleIntersect, 100);\\n\\n  const spyObs = new IntersectionObserver(debouncedHandle, {\\n    rootMargin: \\\"-25% 0px -65% 0px\\\",\\n    threshold: 0\\n  });\\n\\n  sections.forEach((sec) => spyObs.observe(sec));\""
+      }
+    ]
+  },
+  {
+    "step_index": 519,
+    "tool": "replace_file_content",
+    "chunks": [
+      {
+        "startLine": "1475",
+        "endLine": "1499",
+        "targetContent": "\"  const spyObs = new IntersectionObserver(\\n    (entries) => {\\n      entries.forEach((entry) => {\\n        if (entry.isIntersecting) {\\n          const id = entry.target.getAttribute(\\\"id\\\");\\n          if (!id) return;\\n\\n          navLinks.forEach((link) => {\\n            const href = link.getAttribute(\\\"href\\\");\\n            if (href === `#${id}`) {\\n              link.classList.add(\\\"active\\\");\\n            } else {\\n              link.classList.remove(\\\"active\\\");\\n            }\\n          });\\n        }\\n      });\\n    },\\n    {\\n      rootMargin: \\\"-25% 0px -65% 0px\\\",\\n      threshold: 0\\n    }\\n  );\\n\\n  sections.forEach((sec) => spyObs.observe(sec));\"",
+        "replacementContent": "\"  // Debounce utility\\n  function debounce(func, wait) {\\n    let timeout;\\n    return function (...args) {\\n      const later = () => func.apply(this, args);\\n      clearTimeout(timeout);\\n      timeout = setTimeout(later, wait);\\n    };\\n  }\\n\\n  const handleIntersect = (entries) => {\\n    entries.forEach((entry) => {\\n      if (entry.isIntersecting) {\\n        const id = entry.target.getAttribute(\\\"id\\\");\\n        if (!id) return;\\n        navLinks.forEach((link) => {\\n          const href = link.getAttribute(\\\"href\\\");\\n          if (href === `#${id}`) {\\n            link.classList.add(\\\"active\\\");\\n          } else {\\n            link.classList.remove(\\\"active\\\");\\n          }\\n        });\\n      }\\n    });\\n  };\\n\\n  const debouncedHandle = debounce(handleIntersect, 100);\\n\\n  const spyObs = new IntersectionObserver(debouncedHandle, {\\n    rootMargin: \\\"-25% 0px -65% 0px\\\",\\n    threshold: 0\\n  });\\n\\n  sections.forEach((sec) => spyObs.observe(sec));\""
+      }
+    ]
+  },
+  {
+    "step_index": 523,
+    "tool": "replace_file_content",
+    "chunks": [
+      {
+        "startLine": "1475",
+        "endLine": "1499",
+        "targetContent": "\"  const spyObs = new IntersectionObserver(\\n    (entries) => {\\n      entries.forEach((entry) => {\\n        if (entry.isIntersecting) {\\n          const id = entry.target.getAttribute(\\\"id\\\");\\n          if (!id) return;\\n\\n          navLinks.forEach((link) => {\\n            const href = link.getAttribute(\\\"href\\\");\\n            if (href === `#${id}`) {\\n              link.classList.add(\\\"active\\\");\\n            } else {\\n              link.classList.remove(\\\"active\\\");\\n            }\\n          });\\n        }\\n      });\\n    },\\n    {\\n      rootMargin: \\\"-25% 0px -65% 0px\\\",\\n      threshold: 0\\n    }\\n  );\\n\\n  sections.forEach((sec) => spyObs.observe(sec));\"",
+        "replacementContent": "\"  // Debounce utility\\n  function debounce(func, wait) {\\n    let timeout;\\n    return function (...args) {\\n      const later = () => func.apply(this, args);\\n      clearTimeout(timeout);\\n      timeout = setTimeout(later, wait);\\n    };\\n  }\\n\\n  const handleIntersect = (entries) => {\\n    entries.forEach((entry) => {\\n      if (entry.isIntersecting) {\\n        const id = entry.target.getAttribute(\\\"id\\\");\\n        if (!id) return;\\n        navLinks.forEach((link) => {\\n          const href = link.getAttribute(\\\"href\\\");\\n          if (href === `#${id}`) {\\n            link.classList.add(\\\"active\\\");\\n          } else {\\n            link.classList.remove(\\\"active\\\");\\n          }\\n        });\\n      }\\n    });\\n  };\\n\\n  const debouncedHandle = debounce(handleIntersect, 100);\\n\\n  const spyObs = new IntersectionObserver(debouncedHandle, {\\n    rootMargin: \\\"-25% 0px -65% 0px\\\",\\n    threshold: 0\\n  });\\n\\n  sections.forEach((sec) => spyObs.observe(sec));\""
+      }
+    ]
+  },
+  {
+    "step_index": 704,
+    "tool": "replace_file_content",
+    "instruction": "\"Update openModal function to handle local apps and bind cursor text correctly\"",
+    "chunks": [
+      {
+        "startLine": "1380",
+        "endLine": "1412",
+        "targetContent": "\"  function openModal(projKey, triggerBtn) {\\n    const data = projectData[projKey];\\n    if (!data) return;\\n    lastFocusedBtn = triggerBtn;\\n\\n    // Build modal body\\n    body.innerHTML = `\\n      <h2>${data.title}</h2>\\n      <div class=\\\"modal-badge\\\">${data.badge}</div>\\n      <p>${data.desc}</p>\\n      <h4>Key Features</h4>\\n      <ul>\\n        ${data.features.map(f => `<li>${f}</li>`).join(\\\"\\\")}\\n      </ul>\\n      <div class=\\\"modal-links\\\">\\n        <a href=\\\"${data.links.live}\\\" target=\\\"_blank\\\" class=\\\"btn-y-sm btn-y-modal\\\">Live Demo</a>\\n        <a href=\\\"${data.links.git}\\\" target=\\\"_blank\\\" class=\\\"proj-link-git proj-modal-git\\\">GitHub Code</a>\\n      </div>\\n    `;\\n\\n    // Show modal\\n    modal.classList.add(\\\"open\\\");\\n    modal.setAttribute(\\\"aria-hidden\\\", \\\"false\\\");\\n    document.body.style.overflow = \\\"hidden\\\"; // lock scroll\\n\\n    // Focus close button after a small delay\\n    setTimeout(() => closeBtn?.focus(), 50);\\n\\n    // Bind cursor overlays inside modal\\n    bindCursorTxt(\\\".btn-y-modal\\\", \\\"LIVE\\\");\\n    bindCursorTxt(\\\".proj-modal-git\\\", \\\"REPO\\\");\\n    bindCursorTxt(\\\".proj-modal-close\\\", \\\"CLOSE\\\");\\n  }\"",
+        "replacementContent": "\"  function openModal(projKey, triggerBtn) {\\n    const data = projectData[projKey];\\n    if (!data) return;\\n    lastFocusedBtn = triggerBtn;\\n\\n    const isLocalApp = data.links.live === data.links.git || !data.links.live;\\n    const linksHtml = isLocalApp \\n      ? `<a href=\\\"${data.links.git}\\\" target=\\\"_blank\\\" class=\\\"btn-y-sm btn-y-modal\\\">GitHub Repository</a>\\n         <span style=\\\"font-size: 11px; color: rgba(255,255,255,0.35); font-family: 'Oswald', sans-serif; letter-spacing: 0.1em; text-transform: uppercase; align-self: center;\\\">Desktop / Local App</span>`\\n      : `<a href=\\\"${data.links.live}\\\" target=\\\"_blank\\\" class=\\\"btn-y-sm btn-y-modal\\\">Live Demo</a>\\n         <a href=\\\"${data.links.git}\\\" target=\\\"_blank\\\" class=\\\"proj-link-git proj-modal-git\\\">GitHub Code</a>`;\\n\\n    // Build modal body\\n    body.innerHTML = `\\n      <h2>${data.title}</h2>\\n      <div class=\\\"modal-badge\\\">${data.badge}</div>\\n      <p>${data.desc}</p>\\n      <h4>Key Features</h4>\\n      <ul>\\n        ${data.features.map(f => `<li>${f}</li>`).join(\\\"\\\")}\\n      </ul>\\n      <div class=\\\"modal-links\\\">\\n        ${linksHtml}\\n      </div>\\n    `;\\n\\n    // Show modal\\n    modal.classList.add(\\\"open\\\");\\n    modal.setAttribute(\\\"aria-hidden\\\", \\\"false\\\");\\n    document.body.style.overflow = \\\"hidden\\\"; // lock scroll\\n\\n    // Focus close button after a small delay\\n    setTimeout(() => closeBtn?.focus(), 50);\\n\\n    // Bind cursor overlays inside modal\\n    if (isLocalApp) {\\n      bindCursorTxt(\\\".btn-y-modal\\\", \\\"REPO\\\");\\n    } else {\\n      bindCursorTxt(\\\".btn-y-modal\\\", \\\"LIVE\\\");\\n      bindCursorTxt(\\\".proj-modal-git\\\", \\\"REPO\\\");\\n    }\\n    bindCursorTxt(\\\".proj-modal-close\\\", \\\"CLOSE\\\");\\n  }\""
+      }
+    ]
+  },
+  {
+    "step_index": 712,
+    "tool": "replace_file_content",
+    "instruction": "\"Update openModal function in sanush_portfolio.js\"",
+    "chunks": [
+      {
+        "startLine": "1376",
+        "endLine": "1408",
+        "targetContent": "\"  function openModal(projKey, triggerBtn) {\\n    const data = projectData[projKey];\\n    if (!data) return;\\n    lastFocusedBtn = triggerBtn;\\n\\n    // Build modal body\\n    body.innerHTML = `\\n      <h2>${data.title}</h2>\\n      <div class=\\\"modal-badge\\\">${data.badge}</div>\\n      <p>${data.desc}</p>\\n      <h4>Key Features</h4>\\n      <ul>\\n        ${data.features.map(f => `<li>${f}</li>`).join(\\\"\\\")}\\n      </ul>\\n      <div class=\\\"modal-links\\\">\\n        <a href=\\\"${data.links.live}\\\" target=\\\"_blank\\\" class=\\\"btn-y-sm btn-y-modal\\\">Live Demo</a>\\n        <a href=\\\"${data.links.git}\\\" target=\\\"_blank\\\" class=\\\"proj-link-git proj-modal-git\\\">GitHub Code</a>\\n      </div>\\n    `;\\n\\n    // Show modal\\n    modal.classList.add(\\\"open\\\");\\n    modal.setAttribute(\\\"aria-hidden\\\", \\\"false\\\");\\n    document.body.style.overflow = \\\"hidden\\\"; // lock scroll\\n\\n    // Focus close button after a small delay\\n    setTimeout(() => closeBtn?.focus(), 50);\\n\\n    // Bind cursor overlays inside modal\\n    bindCursorTxt(\\\".btn-y-modal\\\", \\\"LIVE\\\");\\n    bindCursorTxt(\\\".proj-modal-git\\\", \\\"REPO\\\");\\n    bindCursorTxt(\\\".proj-modal-close\\\", \\\"CLOSE\\\");\\n  }\"",
+        "replacementContent": "\"  function openModal(projKey, triggerBtn) {\\n    const data = projectData[projKey];\\n    if (!data) return;\\n    lastFocusedBtn = triggerBtn;\\n\\n    const isLocalApp = data.links.live === data.links.git || !data.links.live;\\n    const linksHtml = isLocalApp \\n      ? `<a href=\\\"${data.links.git}\\\" target=\\\"_blank\\\" class=\\\"btn-y-sm btn-y-modal\\\">GitHub Repository</a>\\n         <span style=\\\"font-size: 11.5px; color: rgba(255,255,255,0.35); font-family: 'Oswald', sans-serif; letter-spacing: 0.1em; text-transform: uppercase; align-self: center;\\\">Desktop / Local App</span>`\\n      : `<a href=\\\"${data.links.live}\\\" target=\\\"_blank\\\" class=\\\"btn-y-sm btn-y-modal\\\">Live Demo</a>\\n         <a href=\\\"${data.links.git}\\\" target=\\\"_blank\\\" class=\\\"proj-link-git proj-modal-git\\\">GitHub Code</a>`;\\n\\n    // Build modal body\\n    body.innerHTML = `\\n      <h2>${data.title}</h2>\\n      <div class=\\\"modal-badge\\\">${data.badge}</div>\\n      <p>${data.desc}</p>\\n      <h4>Key Features</h4>\\n      <ul>\\n        ${data.features.map(f => `<li>${f}</li>`).join(\\\"\\\")}\\n      </ul>\\n      <div class=\\\"modal-links\\\">\\n        ${linksHtml}\\n      </div>\\n    `;\\n\\n    // Show modal\\n    modal.classList.add(\\\"open\\\");\\n    modal.setAttribute(\\\"aria-hidden\\\", \\\"false\\\");\\n    document.body.style.overflow = \\\"hidden\\\"; // lock scroll\\n\\n    // Focus close button after a small delay\\n    setTimeout(() => closeBtn?.focus(), 50);\\n\\n    // Bind cursor overlays inside modal\\n    if (isLocalApp) {\\n      bindCursorTxt(\\\".btn-y-modal\\\", \\\"REPO\\\");\\n    } else {\\n      bindCursorTxt(\\\".btn-y-modal\\\", \\\"LIVE\\\");\\n      bindCursorTxt(\\\".proj-modal-git\\\", \\\"REPO\\\");\\n    }\\n    bindCursorTxt(\\\".proj-modal-close\\\", \\\"CLOSE\\\");\\n  }\""
+      }
+    ]
+  },
+  {
+    "step_index": 716,
+    "tool": "replace_file_content",
+    "instruction": "\"Update openModal function in sanush_portfolio.js\"",
+    "chunks": [
+      {
+        "startLine": "1373",
+        "endLine": "1405",
+        "targetContent": "\"  function openModal(projKey, triggerBtn) {\\n    const data = projectData[projKey];\\n    if (!data) return;\\n    lastFocusedBtn = triggerBtn;\\n\\n    // Build modal body\\n    body.innerHTML = `\\n      <h2>${data.title}</h2>\\n      <div class=\\\"modal-badge\\\">${data.badge}</div>\\n      <p>${data.desc}</p>\\n      <h4>Key Features</h4>\\n      <ul>\\n        ${data.features.map(f => `<li>${f}</li>`).join(\\\"\\\")}\\n      </ul>\\n      <div class=\\\"modal-links\\\">\\n        <a href=\\\"${data.links.live}\\\" target=\\\"_blank\\\" class=\\\"btn-y-sm btn-y-modal\\\">Live Demo</a>\\n        <a href=\\\"${data.links.git}\\\" target=\\\"_blank\\\" class=\\\"proj-link-git proj-modal-git\\\">GitHub Code</a>\\n      </div>\\n    `;\\n\\n    // Show modal\\n    modal.classList.add(\\\"open\\\");\\n    modal.setAttribute(\\\"aria-hidden\\\", \\\"false\\\");\\n    document.body.style.overflow = \\\"hidden\\\"; // lock scroll\\n\\n    // Focus close button after a small delay\\n    setTimeout(() => closeBtn?.focus(), 50);\\n\\n    // Bind cursor overlays inside modal\\n    bindCursorTxt(\\\".btn-y-modal\\\", \\\"LIVE\\\");\\n    bindCursorTxt(\\\".proj-modal-git\\\", \\\"REPO\\\");\\n    bindCursorTxt(\\\".proj-modal-close\\\", \\\"CLOSE\\\");\\n  }\"",
+        "replacementContent": "\"  function openModal(projKey, triggerBtn) {\\n    const data = projectData[projKey];\\n    if (!data) return;\\n    lastFocusedBtn = triggerBtn;\\n\\n    const isLocalApp = data.links.live === data.links.git || !data.links.live;\\n    const linksHtml = isLocalApp \\n      ? `<a href=\\\"${data.links.git}\\\" target=\\\"_blank\\\" class=\\\"btn-y-sm btn-y-modal\\\">GitHub Repository</a>\\n         <span style=\\\"font-size: 11.5px; color: rgba(255,255,255,0.35); font-family: 'Oswald', sans-serif; letter-spacing: 0.1em; text-transform: uppercase; align-self: center;\\\">Desktop / Local App</span>`\\n      : `<a href=\\\"${data.links.live}\\\" target=\\\"_blank\\\" class=\\\"btn-y-sm btn-y-modal\\\">Live Demo</a>\\n         <a href=\\\"${data.links.git}\\\" target=\\\"_blank\\\" class=\\\"proj-link-git proj-modal-git\\\">GitHub Code</a>`;\\n\\n    // Build modal body\\n    body.innerHTML = `\\n      <h2>${data.title}</h2>\\n      <div class=\\\"modal-badge\\\">${data.badge}</div>\\n      <p>${data.desc}</p>\\n      <h4>Key Features</h4>\\n      <ul>\\n        ${data.features.map(f => `<li>${f}</li>`).join(\\\"\\\")}\\n      </ul>\\n      <div class=\\\"modal-links\\\">\\n        ${linksHtml}\\n      </div>\\n    `;\\n\\n    // Show modal\\n    modal.classList.add(\\\"open\\\");\\n    modal.setAttribute(\\\"aria-hidden\\\", \\\"false\\\");\\n    document.body.style.overflow = \\\"hidden\\\"; // lock scroll\\n\\n    // Focus close button after a small delay\\n    setTimeout(() => closeBtn?.focus(), 50);\\n\\n    // Bind cursor overlays inside modal\\n    if (isLocalApp) {\\n      bindCursorTxt(\\\".btn-y-modal\\\", \\\"REPO\\\");\\n    } else {\\n      bindCursorTxt(\\\".btn-y-modal\\\", \\\"LIVE\\\");\\n      bindCursorTxt(\\\".proj-modal-git\\\", \\\"REPO\\\");\\n    }\\n    bindCursorTxt(\\\".proj-modal-close\\\", \\\"CLOSE\\\");\\n  }\""
+      }
+    ]
+  }
+]

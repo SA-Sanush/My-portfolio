@@ -3688,76 +3688,51 @@ footer {
 /* Floating Resume FAB */
 .resume-fab {
   position: fixed;
-  bottom: 108px;
+  bottom: 104px;
   right: 32px;
-  z-index: 8999;
-  display: flex;
-  align-items: center;
-  gap: 0px;
-  text-decoration: none;
-  cursor: none;
-  border-radius: 99px;
-  padding: 3px;
-  background: color-mix(in srgb, var(--y) 5%, transparent);
-  border: 1px solid color-mix(in srgb, var(--y) 20%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: var(--w);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease, transform 0.3s ease;
-  overflow: hidden;
-  max-width: 54px;
-  height: 54px;
-  opacity: 0;
-  transform: scale(0.8) translateY(20px);
-  pointer-events: none;
-}
-.resume-fab.show {
-  opacity: 1;
-  transform: scale(1) translateY(0);
-  pointer-events: auto;
-}
-.fab-circle {
-  width: 46px;
-  height: 46px;
+  z-index: 9000;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   background: var(--y);
+  border: none;
+  cursor: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--y) 40%, transparent), 0 8px 32px rgba(0,0,0,0.5);
+  animation: chat-pulse 2.4s ease-in-out infinite;
+  animation-delay: 0.2s; /* Offset pulse for wave effect */
+  transition: transform 0.22s cubic-bezier(.34,1.56,.64,1), box-shadow 0.22s ease;
+  text-decoration: none;
+  opacity: 1;
+  pointer-events: auto;
+}
+.resume-fab:hover {
+  transform: scale(1.12);
+  box-shadow: 0 0 0 8px color-mix(in srgb, var(--y) 12%, transparent), 0 12px 40px rgba(0,0,0,0.6);
+}
+.fab-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: transparent;
   color: var(--b);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 0 15px color-mix(in srgb, var(--y) 30%, transparent);
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease;
 }
 .fab-circle svg {
-  width: 20px;
-  height: 20px;
+  width: 26px;
+  height: 26px;
+  fill: var(--b);
 }
 .fab-text {
-  font-family: 'Oswald', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--y);
-  padding: 0 16px 0 10px;
-  white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-.resume-fab:hover {
-  max-width: 160px;
-  background: color-mix(in srgb, var(--y) 12%, transparent);
-  border-color: var(--y);
-  box-shadow: 0 12px 40px color-mix(in srgb, var(--y) 20%, transparent);
-}
-.resume-fab:hover .fab-text {
-  opacity: 1;
+  display: none;
 }
 .resume-fab:hover .fab-circle {
-  background: #fff;
-  color: var(--b);
   transform: rotate(360deg);
 }
 
@@ -3777,7 +3752,7 @@ footer {
   top: 0;
   left: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--y), #ff9f00, var(--y));
+  background: linear-gradient(90deg, var(--y), color-mix(in srgb, var(--y) 60%, #ff5500), var(--y));
   background-size: 200%;
   width: 0%;
   z-index: 100000;
@@ -4204,7 +4179,7 @@ footer {
 }
 
 .cert-pill-elite {
-  color: #ffe000;
+  color: var(--y);
   background: color-mix(in srgb, var(--y) 8%, transparent);
   border-color: color-mix(in srgb, var(--y) 25%, transparent);
 }
@@ -4217,7 +4192,7 @@ footer {
 
 .cert-elite-chip {
   display: inline-block;
-  background: linear-gradient(90deg, #ff9f00, #ffe000);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--y) 60%, #ff5500), var(--y));
   color: #111;
   font-size: 10px;
   font-weight: 800;
@@ -4658,41 +4633,41 @@ footer {
    NEW FEATURES ADDITIONS ( switcher, cmd+k, raycasting, chat cards )
    ══════════════════════════════════════════ */
 
-/* Accent Theme Selector */
-.theme-selector {
+/* Command Palette Trigger Button */
+.cmd-trigger-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 6px 12px;
+  gap: 7px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 99px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  padding: 6px 12px;
+  color: rgba(245,245,240,0.55);
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  white-space: nowrap;
 }
-@media (max-width: 900px) {
-  .theme-selector {
-    display: none; /* Hide on smaller nav headers to prevent overflow */
-  }
+.cmd-trigger-btn:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: color-mix(in srgb, var(--y) 40%, transparent);
+  color: var(--y);
 }
-.theme-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  cursor: none;
-  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.25s, box-shadow 0.25s;
-  padding: 0;
-  display: block;
+.cmd-trigger-btn kbd {
+  display: inline-block;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 5px;
+  padding: 1px 6px;
+  font-size: 10px;
+  font-family: inherit;
+  color: rgba(245,245,240,0.45);
+  letter-spacing: 0.04em;
 }
-.theme-dot:hover {
-  transform: scale(1.3);
-  border-color: rgba(255, 255, 255, 0.6);
-}
-.theme-dot.active {
-  border-color: #ffffff;
-  transform: scale(1.4);
-  box-shadow: 0 0 10px currentColor;
+@media (max-width: 768px) {
+  .cmd-trigger-btn span { display: none; }
+  .cmd-trigger-btn kbd { display: none; }
 }
 
 /* Command Palette Overlay */
@@ -4823,24 +4798,27 @@ footer {
 
 /* Custom 3D hover state for cursor ring */
 #cur-ring.cur-hover-3d {
-  width: 76px !important;
-  height: 76px !important;
-  margin-left: -38px !important;
-  margin-top: -38px !important;
+  width: 88px !important;
+  height: 88px !important;
+  margin-left: -44px !important;
+  margin-top: -44px !important;
   border-color: var(--y) !important;
-  background: color-mix(in srgb, var(--y) 8%, transparent) !important;
+  background: color-mix(in srgb, var(--y) 10%, transparent) !important;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--y) 25%, transparent) !important;
+  mix-blend-mode: normal !important;
 }
 #cur-ring.cur-hover-3d::after {
-  content: 'EXPLORE';
+  content: 'VIEW PROJECTS';
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 7.5px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 6.8px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   color: var(--y);
   opacity: 1;
+  white-space: nowrap;
 }
 
 /* Chatbot Rich project card visuals */
@@ -4907,4 +4885,68 @@ footer {
 }
 .c-proj-btn:hover .c-proj-btn-arr {
   transform: translate(2px, -2px);
+}
+
+/* ══════════════════════════════════════════
+   COMMAND PALETTE — Custom Cursor States
+══════════════════════════════════════════ */
+
+/* While palette is open: keep cursor visible on top */
+.cmd-overlay.open ~ #cur,
+.cmd-overlay.open ~ #cur-ring,
+body.cmd-open #cur,
+body.cmd-open #cur-ring {
+  z-index: 200000;
+}
+
+/* Cursor dot: shrinks to a pinpoint when hovering a cmd-item */
+body.cmd-item-hover #cur {
+  width: 4px;
+  height: 4px;
+  background: #fff;
+}
+
+/* Cursor ring: expands, glows amber, shows "SELECT" label */
+body.cmd-item-hover #cur-ring {
+  width: 64px;
+  height: 64px;
+  border-color: var(--y);
+  background: color-mix(in srgb, var(--y) 10%, transparent);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--y) 35%, transparent);
+  mix-blend-mode: normal;
+}
+
+body.cmd-item-hover #cur-ring::after {
+  content: 'SELECT';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--y);
+}
+
+/* Cursor ring: accent glow when hovering the search input */
+body.cmd-search-hover #cur-ring {
+  width: 52px;
+  height: 52px;
+  border-color: color-mix(in srgb, var(--y) 80%, transparent);
+  background: color-mix(in srgb, var(--y) 6%, transparent);
+  mix-blend-mode: normal;
+}
+
+body.cmd-search-hover #cur {
+  width: 3px;
+  height: 14px;
+  border-radius: 2px;
+  background: var(--y);
+  animation: cursorBlink 1s step-end infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
 }
