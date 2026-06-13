@@ -1814,9 +1814,11 @@ document.head.appendChild(style);
   }
 
   /* ── 15. Command Palette Modal Logic ── */
+  console.log("Initializing Command Palette elements...");
   const cmdOverlay = document.getElementById("cmd-palette");
   const cmdSearch = document.getElementById("cmd-search");
   const cmdResults = document.getElementById("cmd-results");
+  console.log("Command Palette elements found:", { cmdOverlay, cmdSearch, cmdResults });
   let cmdActiveIndex = 0;
   let currentFilteredCommands = [];
 
@@ -1848,8 +1850,13 @@ document.head.appendChild(style);
   }
 
   function openCmdPalette() {
-    if (!cmdOverlay) return;
+    console.log("openCmdPalette: execution started. cmdOverlay:", cmdOverlay);
+    if (!cmdOverlay) {
+      console.warn("openCmdPalette: cmdOverlay element not found!");
+      return;
+    }
     cmdOverlay.classList.add("open");
+    console.log("openCmdPalette: added 'open' class to overlay. Classes:", cmdOverlay.className);
     document.body.style.overflow = "hidden";
     cmdSearch.value = "";
     cmdSearch.focus();
@@ -1920,6 +1927,7 @@ document.head.appendChild(style);
 
   document.addEventListener("keydown", (e) => {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+      console.log("Ctrl+K / Cmd+K pressed. Event details:", { metaKey: e.metaKey, ctrlKey: e.ctrlKey, key: e.key });
       e.preventDefault();
       e.stopPropagation();
       if (cmdOverlay && cmdOverlay.classList.contains("open")) {
@@ -1953,8 +1961,14 @@ document.head.appendChild(style);
 
   // Nav button click
   const cmdTriggerBtn = document.getElementById("cmd-trigger-btn");
+  console.log("cmdTriggerBtn element found:", cmdTriggerBtn);
   if (cmdTriggerBtn) {
-    cmdTriggerBtn.addEventListener("click", () => openCmdPalette());
+    cmdTriggerBtn.addEventListener("click", (e) => {
+      console.log("cmdTriggerBtn clicked!");
+      e.preventDefault();
+      e.stopPropagation();
+      openCmdPalette();
+    });
   }
 
   if (cmdSearch) {
