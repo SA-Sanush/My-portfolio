@@ -17,6 +17,73 @@
           regs.forEach(r => r.unregister());
         });
       }
+
+      // Unhandled error overlay for debugging
+      window.onerror = function(message, source, lineno, colno, error) {
+        const div = document.createElement('div');
+        div.id = 'debug-error-overlay';
+        div.style.position = 'fixed';
+        div.style.top = '0';
+        div.style.left = '0';
+        div.style.width = '100%';
+        div.style.background = '#ff3333';
+        div.style.color = '#fff';
+        div.style.padding = '15px';
+        div.style.zIndex = '999999';
+        div.style.fontSize = '13px';
+        div.style.fontFamily = 'monospace';
+        div.style.whiteSpace = 'pre-wrap';
+        div.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+        div.innerText = 'Runtime Error: ' + message + '\nSource: ' + source + ':' + lineno + ':' + colno + (error ? '\nStack: ' + error.stack : '');
+        
+        // Add a close button
+        const btn = document.createElement('button');
+        btn.innerText = '✕ Close';
+        btn.style.marginLeft = '20px';
+        btn.style.background = 'rgba(255,255,255,0.2)';
+        btn.style.border = 'none';
+        btn.style.color = '#fff';
+        btn.style.cursor = 'pointer';
+        btn.style.padding = '4px 8px';
+        btn.style.borderRadius = '4px';
+        btn.onclick = () => div.remove();
+        div.appendChild(btn);
+
+        document.documentElement.appendChild(div);
+        return false;
+      };
+
+      window.onunhandledrejection = function(event) {
+        const div = document.createElement('div');
+        div.id = 'debug-reject-overlay';
+        div.style.position = 'fixed';
+        div.style.top = '0';
+        div.style.left = '0';
+        div.style.width = '100%';
+        div.style.background = '#ff6633';
+        div.style.color = '#fff';
+        div.style.padding = '15px';
+        div.style.zIndex = '999999';
+        div.style.fontSize = '13px';
+        div.style.fontFamily = 'monospace';
+        div.style.whiteSpace = 'pre-wrap';
+        div.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+        div.innerText = 'Unhandled Rejection: ' + event.reason;
+        
+        const btn = document.createElement('button');
+        btn.innerText = '✕ Close';
+        btn.style.marginLeft = '20px';
+        btn.style.background = 'rgba(255,255,255,0.2)';
+        btn.style.border = 'none';
+        btn.style.color = '#fff';
+        btn.style.cursor = 'pointer';
+        btn.style.padding = '4px 8px';
+        btn.style.borderRadius = '4px';
+        btn.onclick = () => div.remove();
+        div.appendChild(btn);
+
+        document.documentElement.appendChild(div);
+      };
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link rel="stylesheet" href="sanush_portfolio.css?v=20260613_v7" />
