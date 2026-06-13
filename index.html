@@ -11,9 +11,14 @@
       rel="stylesheet"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <link rel="stylesheet" href="sanush_portfolio.css?v=20260522" />
+    <link rel="stylesheet" href="sanush_portfolio.css?v=20260613" />
+    <meta name="description" content="S A Sanush — Front End Developer & MCA student in Kerala. Building clean, interactive, and memorable web experiences." />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   </head>
   <body>
+    <!-- ══ SCROLL PROGRESS ══ -->
+    <div id="scroll-progress"></div>
+
     <!-- ══ CURSOR ══ -->
     <div id="cur"></div>
     <div id="cur-ring"></div>
@@ -47,11 +52,14 @@
         <div class="nav-links">
           <a href="#about" class="nav-link">About</a>
           <a href="#skills" class="nav-link">Skills</a>
+          <a href="#projects" class="nav-link">Projects</a>
+          <a href="#github-activity" class="nav-link">GitHub</a>
           <a href="#education" class="nav-link">Education</a>
+          <a href="#certifications" class="nav-link">Certificates</a>
           <a href="#contact" class="nav-link">Contact</a>
         </div>
         <div class="nav-actions">
-          <div class="nav-badge"><span class="dot"></span>Available 2025</div>
+          <div class="nav-badge"><span class="dot"></span>Available 2026</div>
           <a href="#contact" class="nav-cta"
             >Contact
             <div class="arr">→</div></a
@@ -80,6 +88,12 @@
             foundations with real-world creative development. Passionate about
             building clean, interactive, and memorable web experiences.
           </p>
+          <!-- Typing effect line -->
+          <div class="hero-typing reveal d4" aria-live="polite">
+            <span class="typing-prefix">I craft</span>
+            <span id="typing-text" class="typing-word"></span>
+            <span class="typing-cursor">|</span>
+          </div>
           <div class="hero-btns reveal d5">
             <a
               href="./Sanush%20Resume.pdf"
@@ -137,21 +151,23 @@
           <span class="mq-item hi">Figma</span><span class="mq-dot">★</span>
           <span class="mq-item">Bootstrap</span><span class="mq-dot">★</span>
           <span class="mq-item hi">Python</span><span class="mq-dot">★</span>
+          <span class="mq-item">Flask</span><span class="mq-dot">★</span>
           <span class="mq-item">MySQL</span><span class="mq-dot">★</span>
-          <span class="mq-item hi">Git & GitHub</span
-          ><span class="mq-dot">★</span> <span class="mq-item">Next JS</span
-          ><span class="mq-dot">★</span>
+          <span class="mq-item hi">Git & GitHub</span>
+          <span class="mq-dot">★</span> <span class="mq-item">Next JS</span>
+          <span class="mq-dot">★</span>
           <!-- duplicate for seamless loop -->
           <span class="mq-item hi">HTML5</span><span class="mq-dot">★</span>
           <span class="mq-item">CSS3</span><span class="mq-dot">★</span>
-          <span class="mq-item hi">JavaScript</span
-          ><span class="mq-dot">★</span>
+          <span class="mq-item hi">JavaScript</span>
+          <span class="mq-dot">★</span>
           <span class="mq-item">Tailwind CSS</span><span class="mq-dot">★</span>
           <span class="mq-item hi">React JS</span><span class="mq-dot">★</span>
           <span class="mq-item">Three JS</span><span class="mq-dot">★</span>
           <span class="mq-item hi">Figma</span><span class="mq-dot">★</span>
           <span class="mq-item">Bootstrap</span><span class="mq-dot">★</span>
           <span class="mq-item hi">Python</span><span class="mq-dot">★</span>
+          <span class="mq-item">Flask</span><span class="mq-dot">★</span>
           <span class="mq-item">MySQL</span><span class="mq-dot">★</span>
           <span class="mq-item hi">Git & GitHub</span
           ><span class="mq-dot">★</span> <span class="mq-item">Next JS</span
@@ -197,23 +213,11 @@
             </div>
           </div>
           <div class="about-visual reveal-r d3">
-            <div
-              class="av-ring"
-              style="
-                width: 250px;
-                height: 250px;
-                animation: spin 18s linear infinite;
-              "
-            ></div>
-            <div
-              class="av-ring"
-              style="
-                width: 190px;
-                height: 190px;
-                animation: spin 12s linear infinite reverse;
-              "
-            ></div>
-            <div class="av-circle">SS</div>
+            <div class="av-avatar-wrap">
+              <div class="av-ring av-ring-outer"></div>
+              <div class="av-ring av-ring-inner"></div>
+              <div class="av-circle"><img src="profile.jpg" alt="S A Sanush" class="av-img" /></div>
+            </div>
             <div class="avail-tag">
               <span class="dot"></span>Open to Opportunities
             </div>
@@ -307,6 +311,10 @@
           <div class="tech-nm">Python</div>
         </div>
         <div class="tech-item">
+          <div class="tech-ico"><img src="https://cdn.simpleicons.org/flask/FFE000" alt="Flask logo" loading="lazy" /></div>
+          <div class="tech-nm">Flask</div>
+        </div>
+        <div class="tech-item">
           <div class="tech-ico"><img src="https://cdn.simpleicons.org/mysql/FFE000" alt="MySQL logo" loading="lazy" /></div>
           <div class="tech-nm">MySQL</div>
         </div>
@@ -326,6 +334,346 @@
           <div class="skills-grid" id="skills-grid">
             <!-- JS rendered -->
           </div>
+        </div>
+      </section>
+
+      <!-- ══ PROJECTS ══ -->
+      <section class="section" id="projects">
+        <div class="sec-tag reveal">My Works</div>
+        <div class="sec-h reveal d1">
+          FEATURED<br /><span class="ou">PROJECTS</span>
+        </div>
+        
+        <!-- Filter Controls -->
+        <div class="project-filters reveal d2">
+          <button class="filter-btn active" data-filter="all">All Projects</button>
+          <button class="filter-btn" data-filter="ai">AI & Python</button>
+          <button class="filter-btn" data-filter="frontend">Frontend UI</button>
+        </div>
+
+        <div class="bento-grid reveal d3">
+          <!-- J.A.R.V.I.S (Featured - spans 2 columns) -->
+          <div class="bento-card featured-project" data-category="ai" data-modal="jarvis">
+            <div class="project-visual jarvis-visual">
+              <div class="arc-reactor">
+                <div class="reactor-ring-1"></div>
+                <div class="reactor-ring-2"></div>
+                <div class="reactor-ring-3"></div>
+                <div class="reactor-core"></div>
+              </div>
+              <div class="console-box">
+                <div class="console-line">&gt; Initializing JARVIS core...</div>
+                <div class="console-line">&gt; Voice engine: Whisper STT [active]</div>
+                <div class="console-line">&gt; Memory: ChromaDB vector database</div>
+                <div class="console-line">&gt; LLM fallback chain: 9 providers</div>
+              </div>
+            </div>
+            <div class="project-info">
+              <div class="project-tags">
+                <span class="p-tag">Python</span>
+                <span class="p-tag">Electron</span>
+                <span class="p-tag">ChromaDB</span>
+                <span class="p-tag">Whisper STT</span>
+                <span class="p-tag">AI Agent</span>
+              </div>
+              <h3 class="project-title">J.A.R.V.I.S — AI Desktop Assistant</h3>
+              <p class="project-desc">
+                A cross-platform AI desktop voice assistant that combines the power of 9 LLM APIs with ChromaDB-powered vector memory for persistent context, offline wake-word activation, and full OS-level voice control.
+              </p>
+              <div class="project-links">
+                <a href="https://github.com/SA-Sanush/Jarvis-AI-Assistant" target="_blank" class="p-link github-link">
+                  <span>GitHub Repo</span>
+                  <svg class="arr-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.137 20.162 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                </a>
+                <button class="p-link explore-btn" data-modal="jarvis">Explore Details ↗</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Talent Acquisition System (Featured - spans 2 columns) -->
+          <div class="bento-card featured-project" data-category="ai" data-modal="tas">
+            <div class="project-visual tas-visual">
+              <div class="scanner-wrap">
+                <div class="scanner-doc">
+                  <div class="doc-line"></div>
+                  <div class="doc-line"></div>
+                  <div class="doc-line"></div>
+                  <div class="doc-line short"></div>
+                  <div class="doc-line"></div>
+                  <div class="doc-line short"></div>
+                </div>
+                <div class="scan-bar"></div>
+              </div>
+              <div class="scan-status">Scanning resume.pdf... [Match: 92%]</div>
+            </div>
+            <div class="project-info">
+              <div class="project-tags">
+                <span class="p-tag">Flask</span>
+                <span class="p-tag">spaCy NLP</span>
+                <span class="p-tag">SQLite</span>
+                <span class="p-tag">Python</span>
+                <span class="p-tag">AI / Matching</span>
+              </div>
+              <h3 class="project-title">Talent Acquisition System</h3>
+              <p class="project-desc">
+                An intelligent recruitment matching dashboard that automatically parses PDF and Word resumes using spaCy NLP, extracts core tech skills, and ranks candidate compatibility scores against target job descriptions.
+              </p>
+              <div class="project-links">
+                <a href="https://github.com/SA-Sanush/Talent-Acquisition-System" target="_blank" class="p-link github-link">
+                  <span>GitHub Repo</span>
+                  <svg class="arr-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.137 20.162 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                </a>
+                <button class="p-link explore-btn" data-modal="tas">Explore Details ↗</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- DayTone -->
+          <div class="bento-card" data-category="ai" data-modal="daytone">
+            <div class="project-visual daytone-visual">
+              <div class="mood-grid">
+                <span class="mood-box" style="background: rgba(0, 247, 255, 0.8);" data-mood="Productive"></span>
+                <span class="mood-box" style="background: rgba(111, 207, 151, 0.8);" data-mood="Calm"></span>
+                <span class="mood-box" style="background: rgba(255, 224, 0, 0.8);" data-mood="Energetic"></span>
+                <span class="mood-box" style="background: rgba(255, 159, 0, 0.8);" data-mood="Stressed"></span>
+                <span class="mood-box" style="background: rgba(0, 247, 255, 0.4);" data-mood="Neutral"></span>
+                
+                <span class="mood-box" style="background: rgba(111, 207, 151, 0.8);" data-mood="Calm"></span>
+                <span class="mood-box" style="background: rgba(0, 247, 255, 0.8);" data-mood="Productive"></span>
+                <span class="mood-box" style="background: rgba(255, 224, 0, 0.8);" data-mood="Energetic"></span>
+                <span class="mood-box" style="background: rgba(255, 159, 0, 0.4);" data-mood="Tired"></span>
+                <span class="mood-box" style="background: rgba(111, 207, 151, 0.8);" data-mood="Calm"></span>
+
+                <span class="mood-box" style="background: rgba(255, 224, 0, 0.8);" data-mood="Energetic"></span>
+                <span class="mood-box" style="background: rgba(111, 207, 151, 0.8);" data-mood="Calm"></span>
+                <span class="mood-box" style="background: rgba(0, 247, 255, 0.8);" data-mood="Productive"></span>
+                <span class="mood-box" style="background: rgba(255, 159, 0, 0.8);" data-mood="Stressed"></span>
+                <span class="mood-box" style="background: rgba(0, 247, 255, 0.8);" data-mood="Productive"></span>
+              </div>
+              <div class="mood-label">Hover cells to log mood</div>
+            </div>
+            <div class="project-info">
+              <div class="project-tags">
+                <span class="p-tag">Flask</span>
+                <span class="p-tag">Python</span>
+                <span class="p-tag">Random Forest</span>
+                <span class="p-tag">VADER NLP</span>
+              </div>
+              <h3 class="project-title">DayTone Mood Tracker</h3>
+              <p class="project-desc">
+                An AI-driven wellness assistant using Random Forest, Decision Trees, and VADER sentiment analytics to track mental health logs, predict burnout levels, and compile analytics reports.
+              </p>
+              <div class="project-links">
+                <a href="https://github.com/SA-Sanush/DayTone-Mood-Analyser" target="_blank" class="p-link github-link">
+                  <span>GitHub Repo</span>
+                  <svg class="arr-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.137 20.162 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                </a>
+                <button class="p-link explore-btn" data-modal="daytone">Explore Details ↗</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- My Portfolio -->
+          <div class="bento-card" data-category="frontend" data-modal="portfolio">
+            <div class="project-visual portfolio-visual">
+              <div class="bot-icon-wrap">
+                <div class="bot-wave"></div>
+                <div class="bot-wave wave-2"></div>
+                <div class="bot-bubble">💬</div>
+              </div>
+              <div class="bot-status-row">
+                <span class="bot-dot pulsing"></span>
+                <span>Chatbot Online</span>
+              </div>
+            </div>
+            <div class="project-info">
+              <div class="project-tags">
+                <span class="p-tag">HTML5</span>
+                <span class="p-tag">CSS3</span>
+                <span class="p-tag">JavaScript</span>
+                <span class="p-tag">Three.js</span>
+              </div>
+              <h3 class="project-title">Interactive AI Portfolio</h3>
+              <p class="project-desc">
+                My personal portfolio website featuring an interactive Three.js 3D background, an autonomous AI-powered assistant, and glassmorphic bento grids.
+              </p>
+              <div class="project-links">
+                <a href="https://github.com/SA-Sanush/My-portfolio" target="_blank" class="p-link github-link">
+                  <span>GitHub Repo</span>
+                  <svg class="arr-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.137 20.162 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                </a>
+                <button class="p-link explore-btn" data-modal="portfolio">Explore Details ↗</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Golf Website -->
+          <div class="bento-card" data-category="frontend">
+            <div class="project-visual golf-visual">
+              <div class="golf-circle-wrap">
+                <div class="golf-circle"></div>
+                <div class="golf-ball"></div>
+              </div>
+              <div class="golf-marquee">
+                <div class="g-marquee-inner">SIDCUP FAMILY GOLF ★ SIDCUP FAMILY GOLF ★ SIDCUP FAMILY GOLF</div>
+              </div>
+            </div>
+            <div class="project-info">
+              <div class="project-tags">
+                <span class="p-tag">HTML5</span>
+                <span class="p-tag">CSS3 Grid</span>
+                <span class="p-tag">JavaScript</span>
+                <span class="p-tag">GSAP style</span>
+              </div>
+              <h3 class="project-title">Sidcup Family Golf Website</h3>
+              <p class="project-desc">
+                An immersive, highly animated golf club landing page featuring clean modern layouts, scroll triggers, custom cursors, dynamic marquee modules, and high-quality video backgrounds.
+              </p>
+              <div class="project-links">
+                <a href="https://github.com/SA-Sanush/Golf-Website" target="_blank" class="p-link github-link">
+                  <span>GitHub Repo</span>
+                  <svg class="arr-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.137 20.162 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Travel Website UI -->
+          <div class="bento-card" data-category="frontend">
+            <div class="project-visual travel-visual">
+              <div class="travel-tabs">
+                <span class="t-tab active" data-bg="linear-gradient(135deg, #FF9F00, #FFE000)">Kerala</span>
+                <span class="t-tab" data-bg="linear-gradient(135deg, #00C6FF, #0072FF)">Pune</span>
+                <span class="t-tab" data-bg="linear-gradient(135deg, #f857a6, #ff5858)">Paris</span>
+              </div>
+              <div class="travel-preview-card">
+                <div class="p-loc">Exploring Kerala, IN</div>
+                <div class="p-price">$299/day</div>
+              </div>
+            </div>
+            <div class="project-info">
+              <div class="project-tags">
+                <span class="p-tag">HTML5</span>
+                <span class="p-tag">CSS Flex/Grid</span>
+                <span class="p-tag">JavaScript</span>
+                <span class="p-tag">Responsive UI</span>
+              </div>
+              <h3 class="project-title">Travel & Booking Platform UI</h3>
+              <p class="project-desc">
+                A multi-page responsive web layout designed for local tour operations. Includes destination sliders, booking wizards, clean testimonials layouts, and corporate partnership lists.
+              </p>
+              <div class="project-links">
+                <a href="https://github.com/SA-Sanush/Travel-Website-UI" target="_blank" class="p-link github-link">
+                  <span>GitHub Repo</span>
+                  <svg class="arr-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.137 20.162 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ GITHUB ACTIVITY ══ -->
+      <section class="section" id="github-activity">
+        <div class="sec-tag reveal">Open Source</div>
+        <div class="sec-h reveal d1">GITHUB<br /><span class="ou">ACTIVITY</span></div>
+        <div class="github-stats-grid reveal d2">
+          <a href="https://github.com/SA-Sanush" target="_blank" class="gh-stat-card">
+            <div class="gh-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.137 20.162 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+            </div>
+            <div class="gh-stat-num">13</div>
+            <div class="gh-stat-lbl">Repositories</div>
+          </a>
+          <a href="https://github.com/SA-Sanush" target="_blank" class="gh-stat-card">
+            <div class="gh-icon">⭐</div>
+            <div class="gh-stat-num" id="gh-stars">2</div>
+            <div class="gh-stat-lbl">Stars Earned</div>
+          </a>
+          <a href="https://github.com/SA-Sanush" target="_blank" class="gh-stat-card">
+            <div class="gh-icon">🔥</div>
+            <div class="gh-stat-num">2024</div>
+            <div class="gh-stat-lbl">Active Since</div>
+          </a>
+          <a href="https://github.com/SA-Sanush" target="_blank" class="gh-stat-card">
+            <div class="gh-icon">🧠</div>
+            <div class="gh-stat-num">2</div>
+            <div class="gh-stat-lbl">AI Projects</div>
+          </a>
+        </div>
+        <!-- Contribution-style heatmap -->
+        <div class="gh-heatmap-wrap reveal d3">
+          <div class="gh-heatmap-label">Contribution activity — 2025–2026</div>
+          <div class="gh-heatmap" id="gh-heatmap"></div>
+        </div>
+        <!-- Repo Cards -->
+        <div class="gh-repos-grid reveal d4">
+          <a href="https://github.com/SA-Sanush/Jarvis-AI-Assistant" target="_blank" class="gh-repo-card">
+            <div class="gh-repo-header">
+              <span class="gh-repo-icon">📁</span>
+              <span class="gh-repo-name">Jarvis-AI-Assistant</span>
+            </div>
+            <p class="gh-repo-desc">Cross-platform AI voice assistant with ChromaDB memory & 9-LLM fallback system</p>
+            <div class="gh-repo-meta">
+              <span class="gh-lang"><span class="gh-lang-dot" style="background:#3572A5"></span>Python</span>
+              <span class="gh-repo-stars">★ 2</span>
+            </div>
+          </a>
+          <a href="https://github.com/SA-Sanush/My-portfolio" target="_blank" class="gh-repo-card">
+            <div class="gh-repo-header">
+              <span class="gh-repo-icon">📁</span>
+              <span class="gh-repo-name">My-portfolio</span>
+            </div>
+            <p class="gh-repo-desc">Interactive 3D glassmorphic portfolio website featuring an autonomous AI chatbot assistant.</p>
+            <div class="gh-repo-meta">
+              <span class="gh-lang"><span class="gh-lang-dot" style="background:#563d7c"></span>CSS</span>
+              <span class="gh-repo-stars">★ 1</span>
+            </div>
+          </a>
+          <a href="https://github.com/SA-Sanush/Talent-Acquisition-System" target="_blank" class="gh-repo-card">
+            <div class="gh-repo-header">
+              <span class="gh-repo-icon">📁</span>
+              <span class="gh-repo-name">Talent-Acquisition-System</span>
+            </div>
+            <p class="gh-repo-desc">NLP-based recruitment matching engine that parses resumes & ranks candidates</p>
+            <div class="gh-repo-meta">
+              <span class="gh-lang"><span class="gh-lang-dot" style="background:#3572A5"></span>Python</span>
+              <span class="gh-repo-stars">★ 1</span>
+            </div>
+          </a>
+          <a href="https://github.com/SA-Sanush/DayTone-Mood-Analyser" target="_blank" class="gh-repo-card">
+            <div class="gh-repo-header">
+              <span class="gh-repo-icon">📁</span>
+              <span class="gh-repo-name">DayTone-Mood-Analyser</span>
+            </div>
+            <p class="gh-repo-desc">AI wellness tracker with VADER NLP, Random Forest & burnout prediction</p>
+            <div class="gh-repo-meta">
+              <span class="gh-lang"><span class="gh-lang-dot" style="background:#3572A5"></span>Python</span>
+              <span class="gh-repo-stars">★ 1</span>
+            </div>
+          </a>
+          <a href="https://github.com/SA-Sanush/Golf-Website" target="_blank" class="gh-repo-card">
+            <div class="gh-repo-header">
+              <span class="gh-repo-icon">📁</span>
+              <span class="gh-repo-name">Golf-Website</span>
+            </div>
+            <p class="gh-repo-desc">Immersive animated golf club landing page with scroll triggers & video backgrounds</p>
+            <div class="gh-repo-meta">
+              <span class="gh-lang"><span class="gh-lang-dot" style="background:#e34c26"></span>HTML</span>
+              <span class="gh-repo-stars">★ 0</span>
+            </div>
+          </a>
+          <a href="https://github.com/SA-Sanush/Travel-Website-UI" target="_blank" class="gh-repo-card">
+            <div class="gh-repo-header">
+              <span class="gh-repo-icon">📁</span>
+              <span class="gh-repo-name">Travel-Website-UI</span>
+            </div>
+            <p class="gh-repo-desc">Responsive travel bookings and local tour operator dashboard layout</p>
+            <div class="gh-repo-meta">
+              <span class="gh-lang"><span class="gh-lang-dot" style="background:#e34c26"></span>HTML</span>
+              <span class="gh-repo-stars">★ 0</span>
+            </div>
+          </a>
         </div>
       </section>
 
@@ -410,6 +758,121 @@
               <div class="edu-score-l">Percentage</div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <!-- ══ CERTIFICATIONS ══ -->
+      <section class="section" id="certifications">
+        <div class="sec-tag reveal">Real Credentials · LinkedIn Verified</div>
+        <div class="sec-h reveal d1">CERTIFI<span class="ou">CATIONS</span></div>
+
+        <div class="certs-list reveal d2">
+
+          <!-- 1 -->
+          <div class="cert-row">
+            <div class="cert-num">01</div>
+            <div class="cert-divider"></div>
+            <div class="cert-content">
+              <div class="cert-content-top">
+                <div class="cert-ico">🛡️</div>
+                <div>
+                  <div class="cert-name">Introduction to Ethical Hacking</div>
+                  <div class="cert-org">Offenso Hackers Academy</div>
+                </div>
+              </div>
+              <div class="cert-meta-row">
+                <span class="cert-date">Mar 2023</span>
+                <span class="cert-tag-pill">Security</span>
+                <span class="cert-pill-verified">✓ Verified</span>
+                <a href="https://www.linkedin.com/in/sa-sanush/details/certifications/" target="_blank" class="cert-link-btn">Verify ↗</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2 -->
+          <div class="cert-row">
+            <div class="cert-num">02</div>
+            <div class="cert-divider"></div>
+            <div class="cert-content">
+              <div class="cert-content-top">
+                <div class="cert-ico">🔐</div>
+                <div>
+                  <div class="cert-name">Cyber Security Training</div>
+                  <div class="cert-org">Acmegrade · IIT Bombay Mood Indigo</div>
+                </div>
+              </div>
+              <div class="cert-meta-row">
+                <span class="cert-date">Aug – Sep 2023</span>
+                <span class="cert-tag-pill">Security</span>
+                <span class="cert-pill-verified">✓ Verified</span>
+                <a href="https://www.linkedin.com/in/sa-sanush/details/certifications/" target="_blank" class="cert-link-btn">Verify ↗</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3 -->
+          <div class="cert-row cert-row-featured">
+            <div class="cert-num">03</div>
+            <div class="cert-divider"></div>
+            <div class="cert-content">
+              <div class="cert-content-top">
+                <div class="cert-ico">💻</div>
+                <div>
+                  <div class="cert-name">Full Stack Web Development Intern</div>
+                  <div class="cert-org">Unified Mentor Pvt Ltd</div>
+                </div>
+              </div>
+              <div class="cert-meta-row">
+                <span class="cert-date">Dec 2024 – Apr 2025</span>
+                <span class="cert-tag-pill">Web Dev</span>
+                <span class="cert-pill-internship">✓ Internship</span>
+                <a href="https://www.linkedin.com/in/sa-sanush/details/certifications/" target="_blank" class="cert-link-btn">Verify ↗</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 -->
+          <div class="cert-row cert-row-featured">
+            <div class="cert-num">04</div>
+            <div class="cert-divider"></div>
+            <div class="cert-content">
+              <div class="cert-content-top">
+                <div class="cert-ico">☁️</div>
+                <div>
+                  <div class="cert-name">Cloud Computing <span class="cert-elite-chip">ELITE</span></div>
+                  <div class="cert-org">NPTEL · IIT Kharagpur · Swayam · Score: 65%</div>
+                </div>
+              </div>
+              <div class="cert-meta-row">
+                <span class="cert-date">Jan – Apr 2026</span>
+                <span class="cert-tag-pill">Cloud</span>
+                <span class="cert-pill-elite">★ Elite</span>
+                <a href="https://www.linkedin.com/in/sa-sanush/details/certifications/" target="_blank" class="cert-link-btn">Verify ↗</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5 -->
+          <div class="cert-row cert-row-featured">
+            <div class="cert-num">05</div>
+            <div class="cert-divider"></div>
+            <div class="cert-content">
+              <div class="cert-content-top">
+                <div class="cert-ico">🤖</div>
+                <div>
+                  <div class="cert-name">Agentic AI Hackathon with IBM watsonx</div>
+                  <div class="cert-org">IBM watsonx Orchestrate · LabLab.ai</div>
+                </div>
+              </div>
+              <div class="cert-meta-row">
+                <span class="cert-date">Nov 21–23, 2025</span>
+                <span class="cert-tag-pill">AI</span>
+                <span class="cert-pill-outstanding">✦ Outstanding</span>
+                <a href="https://www.linkedin.com/in/sa-sanush/details/certifications/" target="_blank" class="cert-link-btn">Verify ↗</a>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -512,20 +975,32 @@
               </div>
               <div class="r-arrow">↗</div>
             </a>
-            <div class="msg-card">
-              <div class="sec-tag" style="margin-bottom: 0">Quick Note</div>
-              <p class="msg-body">
-                Whether you have a project in mind, want to collaborate on
-                something creative, or just want to say hello — I'd love to hear
-                from you. I'm always excited to explore new opportunities and
-                challenges.
-              </p>
-              <a
-                href="mailto:sasanush86@gmail.com"
-                class="btn-y"
-                style="margin-top: 24px; display: inline-flex"
-                >Send an Email →</a
-              >
+            <div class="msg-card contact-form-card">
+              <div class="sec-tag" style="margin-bottom: 20px">Send a Message</div>
+              <form id="portfolio-contact-form" onsubmit="event.preventDefault(); handleFormSubmit();">
+                <div class="form-group">
+                  <input type="text" id="form-name" required placeholder=" " />
+                  <label for="form-name">Your Name</label>
+                  <span class="focus-border"></span>
+                </div>
+                <div class="form-group">
+                  <input type="email" id="form-email" required placeholder=" " />
+                  <label for="form-email">Your Email</label>
+                  <span class="focus-border"></span>
+                </div>
+                <div class="form-group">
+                  <textarea id="form-message" required placeholder=" " rows="4"></textarea>
+                  <label for="form-message">Message</label>
+                  <span class="focus-border"></span>
+                </div>
+                <button type="submit" class="btn-y submit-btn" style="width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 8px;">
+                  <span>Send Message</span>
+                  <div class="arr" style="transform: none; margin: 0;">→</div>
+                </button>
+              </form>
+              <div class="form-success-toast" id="form-toast">
+                <span class="toast-check">✓</span> Message sent! I will get back to you shortly.
+              </div>
             </div>
           </div>
         </div>
@@ -533,11 +1008,13 @@
 
       <!-- FOOTER -->
       <footer>
-        <div class="f-copy">© 2025 S A Sanush. All rights reserved.</div>
+        <div class="f-copy">© 2026 S A Sanush. All rights reserved.</div>
         <div class="f-links">
           <a href="#about" class="f-link">About</a>
           <a href="#skills" class="f-link">Skills</a>
+          <a href="#projects" class="f-link">Projects</a>
           <a href="#education" class="f-link">Education</a>
+          <a href="#certifications" class="f-link">Certificates</a>
           <a href="#contact" class="f-link">Contact</a>
         </div>
         <div class="f-built">Built with HTML · CSS · JS · Three.js</div>
@@ -545,7 +1022,46 @@
     </div>
     <!-- /#app -->
 
-    <script src="sanush_portfolio.js?v=20260522"></script>
+    <!-- ══ SIDE SOCIAL DOCK ══ -->
+    <div class="side-dock" id="side-dock">
+      <a href="https://github.com/SA-Sanush" target="_blank" class="side-dock-link" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.137 20.162 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+        <span class="dock-tooltip">GitHub</span>
+      </a>
+      <a href="https://www.linkedin.com/in/sa-sanush/" target="_blank" class="side-dock-link" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        <span class="dock-tooltip">LinkedIn</span>
+      </a>
+      <a href="mailto:sasanush86@gmail.com" class="side-dock-link" aria-label="Email">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        <span class="dock-tooltip">Email</span>
+      </a>
+      <a href="./Sanush%20Resume.pdf" target="_blank" class="side-dock-link" aria-label="Resume">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zm-7-1h-2v-2h2v2zm0-4h-2v-5h2v5z"/></svg>
+        <span class="dock-tooltip">Resume</span>
+      </a>
+      <div class="dock-line"></div>
+    </div>
+
+    <!-- ══ PROJECT MODAL ══ -->
+    <div id="project-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Project Details">
+      <div class="modal-box">
+        <button class="modal-close" id="modal-close" aria-label="Close modal">✕</button>
+        <div class="modal-header">
+          <div class="modal-tags" id="modal-tags"></div>
+          <h2 class="modal-title" id="modal-title"></h2>
+        </div>
+        <div class="modal-visual" id="modal-visual"></div>
+        <p class="modal-desc" id="modal-desc"></p>
+        <div class="modal-features" id="modal-features"></div>
+        <div class="modal-links" id="modal-links"></div>
+      </div>
+    </div>
+
+    <!-- ══ CONFETTI CANVAS ══ -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <script src="sanush_portfolio.js?v=20260613"></script>
 
     <!-- ══ AI CHATBOT ══ -->
 
@@ -566,7 +1082,7 @@
     <div id="chat-window" role="dialog" aria-label="AI Portfolio Assistant">
       <!-- Header -->
       <div class="chat-header">
-        <div class="chat-avatar">SAS</div>
+        <div class="chat-avatar"><img src="profile.jpg" alt="Sanush" class="chat-avatar-img" /></div>
         <div class="chat-header-info">
           <div class="chat-header-name">Sanush's AI Assistant</div>
           <div class="chat-header-sub"><span>●</span>Online — here to help</div>
@@ -597,6 +1113,16 @@
       </div>
     </div>
 
-    <script src="chatbot.js?v=20260522"></script>
+    <script src="chatbot.js?v=20260613"></script>
+
+    <!-- Floating Resume FAB -->
+    <a href="./Sanush%20Resume.pdf" target="_blank" id="resume-fab" class="resume-fab" aria-label="Download CV">
+      <div class="fab-circle">
+        <svg class="icon-download" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
+        </svg>
+      </div>
+      <span class="fab-text">Get CV</span>
+    </a>
   </body>
 </html>

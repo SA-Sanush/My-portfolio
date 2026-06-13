@@ -19,7 +19,10 @@
   const defaultQuickReplies = [
     "Who is Sanush?",
     "View his skills",
-    "Education background",
+    "Featured Projects",
+    "GitHub Activity",
+    "Education details",
+    "Certificates",
     "Contact Sanush",
     "Sanush Resume"
   ];
@@ -62,7 +65,7 @@
   function greetUser() {
     const greeting = getTimeGreeting();
     appendBotMessage(
-      `${greeting}, <strong>${userName}</strong>! Welcome to Sanush's portfolio. I'm his AI assistant - I can tell you about his skills, education, background, or help you navigate to any section. What would you like to know?`
+      `${greeting}, <strong>${userName}</strong>! Welcome to Sanush's portfolio. I'm his AI assistant - I can tell you about his skills, projects, GitHub activity, education, certificates, background, or help you navigate to any section. What would you like to know?`
     );
 
     setTimeout(() => {
@@ -249,9 +252,33 @@
       hasPhrase(normalized, "react") ||
       hasPhrase(normalized, "javascript") ||
       hasPhrase(normalized, "html") ||
-      hasPhrase(normalized, "css")
+      hasPhrase(normalized, "css") ||
+      hasPhrase(normalized, "flask")
     ) {
-      return `Sanush works with HTML5, CSS3, JavaScript, React JS, Tailwind CSS, Bootstrap, Next JS, Three.js, Figma, Python, MySQL, Git, and GitHub. [NAV:skills]`;
+      return `Sanush works with HTML5, CSS3, JavaScript, React JS, Tailwind CSS, Bootstrap, Next JS, Three.js, Figma, Python, Flask, MySQL, Git, and GitHub. [NAV:skills]`;
+    }
+
+    if (
+      hasPhrase(normalized, "project") ||
+      hasPhrase(normalized, "work") ||
+      hasPhrase(normalized, "built") ||
+      hasPhrase(normalized, "make") ||
+      hasPhrase(normalized, "made") ||
+      hasPhrase(normalized, "jarvis") ||
+      hasPhrase(normalized, "daytone") ||
+      hasPhrase(normalized, "mood") ||
+      hasPhrase(normalized, "talent") ||
+      hasPhrase(normalized, "golf") ||
+      hasPhrase(normalized, "travel") ||
+      hasPhrase(normalized, "portfolio")
+    ) {
+      return `Sanush has built some outstanding interactive projects! Here are the highlights:<br><br>` +
+        `🤖 <strong>J.A.R.V.I.S — AI Assistant</strong> — Desktop voice assistant using 9 LLM APIs, ChromaDB vector memory, and Whisper speech control.<br>` +
+        `📄 <strong>Talent Acquisition System</strong> — Recruiter dashboard that parses PDF resumes using spaCy NLP and scores candidate matches.<br>` +
+        `🧠 <strong>DayTone Mood Tracker</strong> — Sentiment analytics diary and burnout risk predictor running Flask and Random Forest ML.<br>` +
+        `💻 <strong>Interactive AI Portfolio</strong> — This website, featuring a 3D Three.js particle space, custom bento grids, and myself (the AI assistant!).<br>` +
+        `⛳ <strong>Sidcup Family Golf</strong> & ✈️ <strong>Travel Booking UI</strong> — Stunning responsive landing layouts with rich frontend animations.<br><br>` +
+        `You can explore details and codebase links in the Projects section! [NAV:projects]`;
     }
 
     if (
@@ -275,6 +302,23 @@
     }
 
     if (
+      hasPhrase(normalized, "certificat") ||
+      hasPhrase(normalized, "credential") ||
+      hasPhrase(normalized, "cert")
+    ) {
+      return `Sanush holds several verified credentials, including an Elite Silver NPTEL badge in Python, an Outstanding performer certificate from KASE, and internship completions at Hyphen. [NAV:certifications]`;
+    }
+
+    if (
+      hasPhrase(normalized, "github") ||
+      hasPhrase(normalized, "open source") ||
+      hasPhrase(normalized, "repo") ||
+      hasPhrase(normalized, "activity")
+    ) {
+      return `Sanush has 13 public repositories on GitHub. His featured works include J.A.R.V.I.S, Talent Acquisition System, DayTone Mood Analyser, and this portfolio website. [NAV:github-activity]`;
+    }
+
+    if (
       hasPhrase(normalized, "navigate") ||
       hasPhrase(normalized, "go to") ||
       hasPhrase(normalized, "show") ||
@@ -283,9 +327,12 @@
     ) {
       if (hasPhrase(normalized, "about")) return "Taking you to the About section. [NAV:about]";
       if (hasPhrase(normalized, "skills")) return "Taking you to the Skills section. [NAV:skills]";
+      if (hasPhrase(normalized, "project")) return "Taking you to the Projects section. [NAV:projects]";
+      if (hasPhrase(normalized, "github") || hasPhrase(normalized, "activity")) return "Taking you to the GitHub Activity section. [NAV:github-activity]";
       if (hasPhrase(normalized, "education")) return "Taking you to the Education section. [NAV:education]";
+      if (hasPhrase(normalized, "certificat") || hasPhrase(normalized, "cert")) return "Taking you to the Certificates timeline. [NAV:certifications]";
       if (hasPhrase(normalized, "contact")) return "Taking you to the Contact section. [NAV:contact]";
-      return "I can take you to About, Skills, Education, or Contact. Which one would you like?";
+      return "I can take you to About, Skills, Projects, GitHub Activity, Education, Certificates, or Contact. Which one would you like?";
     }
 
     if (hasPhrase(normalized, "thank you") || hasPhrase(normalized, "thanks")) {
