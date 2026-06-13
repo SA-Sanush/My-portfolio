@@ -1811,79 +1811,6 @@ document.head.appendChild(style);
     });
   }
 
-  /* ── 14. Accent Theme Switcher Logic ── */
-  window.setAccentColor = function(colorHex) {
-    window.currentAccentColor = colorHex;
-    document.documentElement.style.setProperty('--y', colorHex);
-    localStorage.setItem("sanush-accent-color", colorHex);
-    
-    document.querySelectorAll(".theme-dot").forEach(btn => {
-      btn.classList.toggle("active", btn.dataset.color === colorHex);
-    });
-    
-    // Update Simpleicons SVG colors dynamically to match theme accent
-    const cleanHex = colorHex.replace("#", "").toUpperCase();
-    document.querySelectorAll("img").forEach(img => {
-      const src = img.getAttribute("src");
-      if (src && src.includes("cdn.simpleicons.org")) {
-        const newSrc = src.replace(/cdn\.simpleicons\.org\/([^\/]+)\/([A-Fa-f0-9]{6})/i, `cdn.simpleicons.org/$1/${cleanHex}`);
-        img.setAttribute("src", newSrc);
-      }
-    });
-
-    if (window.THREE && Array.isArray(window.accentMaterials)) {
-      const threeColor = new THREE.Color(colorHex);
-      window.accentMaterials.forEach(obj => {
-        if (!obj) return;
-        if (obj.isMaterial) {
-          obj.color.copy(threeColor);
-          if (obj.emissive && typeof obj.emissive.copy === "function") {
-            obj.emissive.copy(threeColor);
-          }
-        } else if (obj.isLight) {
-          obj.color.copy(threeColor);
-        }
-      });
-    }
-    // Update heatmap cells to match new accent
-    if (typeof window._renderHeatmap === 'function') {
-      window._renderHeatmap(colorHex);
-    }
-
-    // Update Kerala travel tab gradient if it's the active tab
-    const travelVis = document.querySelector(".travel-visual");
-    const keralaTab = document.querySelector(".t-tab[data-bg-accent].active");
-    if (keralaTab && travelVis) {
-      const warm = `color-mix(in srgb, ${colorHex} 60%, #ff5500)`;
-      travelVis.style.background = `linear-gradient(135deg, ${warm}, ${colorHex})`;
-    }
-  };
-
-  const themeSelector = document.getElementById("theme-selector");
-  if (themeSelector) {
-    themeSelector.querySelectorAll(".theme-dot").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const color = btn.dataset.color;
-        window.setAccentColor(color);
-      });
-      btn.addEventListener("mouseenter", () => {
-        const curRing = document.getElementById("cur-ring");
-        if (curRing) curRing.classList.add("big");
-      });
-      btn.addEventListener("mouseleave", () => {
-        const curRing = document.getElementById("cur-ring");
-        if (curRing) curRing.classList.remove("big");
-      });
-    });
-  }
-
-  const savedColor = localStorage.getItem("sanush-accent-color");
-  if (savedColor) {
-    setTimeout(() => {
-      window.setAccentColor(savedColor);
-    }, 800);
-  }
-
   /* ── 15. Command Palette Modal Logic ── */
   const cmdOverlay = document.getElementById("cmd-palette");
   const cmdSearch = document.getElementById("cmd-search");
@@ -1901,12 +1828,7 @@ document.head.appendChild(style);
     { key: "certifications", title: "Certificates — Credentials", desc: "Navigate to my verified licenses & certifications", shortcut: "C", action: () => scrollToId("certifications") },
     { key: "contact", title: "Contact — Let's Talk", desc: "Navigate to the contact form & socials", shortcut: "M", action: () => scrollToId("contact") },
     { key: "resume", title: "Resume — View PDF", desc: "Open resume in a new browser tab", shortcut: "R", action: () => window.open("./Sanush%20Resume.pdf", "_blank") },
-    { key: "chatbot", title: "Chatbot — Open AI Assistant", desc: "Toggle the chat assistant overlay window", shortcut: "T", action: () => triggerChatbot() },
-    { key: "theme-gold", title: "Theme — Accent: Gold", desc: "Switch accents to default yellow", shortcut: "T1", action: () => window.setAccentColor("#ffe000") },
-    { key: "theme-cyan", title: "Theme — Accent: Neon Cyan", desc: "Switch accents to high-tech cyan", shortcut: "T2", action: () => window.setAccentColor("#00f7ff") },
-    { key: "theme-green", title: "Theme — Accent: Emerald Green", desc: "Switch accents to minty emerald", shortcut: "T3", action: () => window.setAccentColor("#39ff14") },
-    { key: "theme-pink", title: "Theme — Accent: Neon Pink", desc: "Switch accents to magenta pink", shortcut: "T4", action: () => window.setAccentColor("#ff007f") },
-    { key: "theme-purple", title: "Theme — Accent: Deep Purple", desc: "Switch accents to cyber purple", shortcut: "T5", action: () => window.setAccentColor("#9b5de5") }
+    { key: "chatbot", title: "Chatbot — Open AI Assistant", desc: "Toggle the chat assistant overlay window", shortcut: "T", action: () => triggerChatbot() }
   ];
 
   function scrollToId(id) {
