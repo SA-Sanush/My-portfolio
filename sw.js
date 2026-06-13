@@ -1,11 +1,11 @@
-const CACHE_NAME = "sanush-portfolio-v16";
+const CACHE_NAME = "sanush-portfolio-v17";
 const ASSETS = [
   "./",
   "./index.html",
-  "./sanush_portfolio.css?v=20260613_v16",
-  "./sanush_portfolio.js?v=20260613_v16",
-  "./chatbot.js?v=20260613_v16",
-  "./cmd-palette.js?v=20260613_v16",
+  "./sanush_portfolio.css?v=20260613_v17",
+  "./sanush_portfolio.js?v=20260613_v17",
+  "./chatbot.js?v=20260613_v17",
+  "./cmd-palette.js?v=20260613_v17",
   "./favicon.svg",
   "./profile.jpg"
 ];

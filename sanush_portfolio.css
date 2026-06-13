@@ -4805,6 +4805,7 @@ footer {
   border-color: var(--y) !important;
   background: color-mix(in srgb, var(--y) 10%, transparent) !important;
   box-shadow: 0 0 20px color-mix(in srgb, var(--y) 25%, transparent) !important;
+  mix-blend-mode: normal !important;
 }
 #cur-ring.cur-hover-3d::after {
   content: 'VIEW PROJECTS';
