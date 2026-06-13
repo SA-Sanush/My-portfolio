@@ -1791,6 +1791,16 @@ document.head.appendChild(style);
       btn.classList.toggle("active", btn.dataset.color === colorHex);
     });
     
+    // Update Simpleicons SVG colors dynamically to match theme accent
+    const cleanHex = colorHex.replace("#", "").toUpperCase();
+    document.querySelectorAll("img").forEach(img => {
+      const src = img.getAttribute("src");
+      if (src && src.includes("cdn.simpleicons.org")) {
+        const newSrc = src.replace(/cdn\.simpleicons\.org\/([^\/]+)\/([A-Fa-f0-9]{6})/i, `cdn.simpleicons.org/$1/${cleanHex}`);
+        img.setAttribute("src", newSrc);
+      }
+    });
+
     if (window.THREE && Array.isArray(window.accentMaterials)) {
       const threeColor = new THREE.Color(colorHex);
       window.accentMaterials.forEach(obj => {
