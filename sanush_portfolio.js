@@ -1312,24 +1312,37 @@ document.head.appendChild(style);
     const btn = form ? form.querySelector(".submit-btn") : null;
     const btnSpan = btn ? btn.querySelector("span") : null;
 
+    // EmailJS credentials - replace these with your actual keys
+    const EMAILJS_PUBLIC_KEY = "YOUR_EMAILJS_PUBLIC_KEY"; 
+    const EMAILJS_SERVICE_ID = "YOUR_EMAILJS_SERVICE_ID";
+    const EMAILJS_TEMPLATE_ID = "YOUR_EMAILJS_TEMPLATE_ID";
+
     // Show loading state
     if (btn) { btn.disabled = true; btn.style.opacity = "0.7"; }
     if (btnSpan) btnSpan.textContent = "Sending…";
 
+    if (EMAILJS_PUBLIC_KEY === "YOUR_EMAILJS_PUBLIC_KEY") {
+      alert("Please configure your EmailJS credentials in sanush_portfolio.js first!");
+      if (btn) { btn.disabled = false; btn.style.opacity = "1"; }
+      if (btnSpan) btnSpan.textContent = "Send Message";
+      return;
+    }
+
     try {
-      const formData = new FormData(form);
-      // Manually add field values since inputs use id not name
-      formData.set("name", document.getElementById("form-name").value);
-      formData.set("email", document.getElementById("form-email").value);
-      formData.set("message", document.getElementById("form-message").value);
-
-      const res = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        body: formData
+      // Initialize EmailJS
+      emailjs.init({
+        publicKey: EMAILJS_PUBLIC_KEY,
       });
-      const data = await res.json();
 
-      if (data.success) {
+      const templateParams = {
+        from_name: document.getElementById("form-name").value,
+        reply_to: document.getElementById("form-email").value,
+        message: document.getElementById("form-message").value,
+      };
+
+      const res = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+
+      if (res.status === 200) {
         // Success
         if (toast) {
           toast.classList.add("show");
@@ -1337,10 +1350,11 @@ document.head.appendChild(style);
         }
         if (form) form.reset();
       } else {
-        alert("Oops! Something went wrong: " + (data.message || "Please try again."));
+        alert("Oops! Something went wrong: status " + res.status);
       }
     } catch (err) {
-      alert("Network error — please email me directly at sasanush86@gmail.com");
+      console.error("EmailJS Error:", err);
+      alert("Error sending message. Please email me directly at sasanush86@gmail.com");
     } finally {
       if (btn) { btn.disabled = false; btn.style.opacity = "1"; }
       if (btnSpan) btnSpan.textContent = "Send Message";
