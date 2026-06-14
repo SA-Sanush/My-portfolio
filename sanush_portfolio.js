@@ -1313,9 +1313,9 @@ document.head.appendChild(style);
     const btnSpan = btn ? btn.querySelector("span") : null;
 
     // EmailJS credentials - replace these with your actual keys
-    const EMAILJS_PUBLIC_KEY = "YOUR_EMAILJS_PUBLIC_KEY"; 
-    const EMAILJS_SERVICE_ID = "YOUR_EMAILJS_SERVICE_ID";
-    const EMAILJS_TEMPLATE_ID = "YOUR_EMAILJS_TEMPLATE_ID";
+    const EMAILJS_PUBLIC_KEY = "WrqDIjZxVauYxwUEg"; 
+    const EMAILJS_SERVICE_ID = "service_fbolu0w";
+    const EMAILJS_TEMPLATE_ID = "template_j91i93m";
 
     // Show loading state
     if (btn) { btn.disabled = true; btn.style.opacity = "0.7"; }
@@ -1335,9 +1335,12 @@ document.head.appendChild(style);
       });
 
       const templateParams = {
+        name: document.getElementById("form-name").value,
         from_name: document.getElementById("form-name").value,
+        email: document.getElementById("form-email").value,
         reply_to: document.getElementById("form-email").value,
         message: document.getElementById("form-message").value,
+        title: "New Contact Message",
       };
 
       const res = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
