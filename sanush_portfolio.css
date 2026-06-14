@@ -827,29 +827,82 @@ nav.nav-scrolled {
 .about-stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 14px;
   margin-top: 28px;
 }
 .a-stat {
-  background: color-mix(in srgb, var(--y) 5%, transparent);
-  border: 1px solid color-mix(in srgb, var(--y) 12%, transparent);
-  border-radius: 16px;
-  padding: 22px 20px;
+  position: relative;
+  background: color-mix(in srgb, var(--y) 4%, #0d0d0d);
+  border: 1px solid color-mix(in srgb, var(--y) 14%, transparent);
+  border-radius: 18px;
+  padding: 18px 18px 16px;
+  cursor: default;
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.a-stat::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  background: radial-gradient(ellipse at top left, color-mix(in srgb, var(--y) 12%, transparent), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+.a-stat:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--y) 45%, transparent);
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--y) 15%, transparent),
+              0 0 0 1px color-mix(in srgb, var(--y) 20%, transparent);
+}
+.a-stat:hover::before {
+  opacity: 1;
+}
+.a-stat-icon {
+  font-size: 22px;
+  line-height: 1;
+  margin-bottom: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: color-mix(in srgb, var(--y) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--y) 20%, transparent);
+  border-radius: 10px;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+.a-stat:hover .a-stat-icon {
+  background: color-mix(in srgb, var(--y) 20%, transparent);
+  transform: scale(1.1) rotate(-4deg);
 }
 .a-stat-n {
   font-family: "Bebas Neue", sans-serif;
-  font-size: 50px;
+  font-size: 42px;
   color: var(--y);
   line-height: 1;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 20px color-mix(in srgb, var(--y) 40%, transparent);
 }
 .a-stat-l {
   font-family: "Oswald", sans-serif;
   font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.2em;
+  font-weight: 600;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.3);
-  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.55);
+  margin-top: 3px;
+}
+.a-stat-desc {
+  font-family: "Poppins", sans-serif;
+  font-size: 10px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.28);
+  margin-top: 6px;
+  line-height: 1.4;
+  border-top: 1px solid color-mix(in srgb, var(--y) 8%, transparent);
+  padding-top: 6px;
 }
 .about-visual {
   background: var(--g1);
