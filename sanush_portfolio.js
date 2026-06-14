@@ -38,8 +38,20 @@ document
   let p = 0;
   let lAnim = 0;
   let renderer = null;
+  let isLoaded = document.readyState === "complete";
+  if (!isLoaded) {
+    window.addEventListener("load", () => {
+      isLoaded = true;
+    });
+  }
+
   const iv = setInterval(() => {
-    p += p < 85 ? Math.random() * 3 + 1 : Math.random() * 0.5;
+    if (isLoaded) {
+      p += 15;
+    } else {
+      p += p < 85 ? Math.random() * 3 + 1 : Math.random() * 0.5;
+    }
+    
     if (p >= 100) {
       p = 100;
       clearInterval(iv);
