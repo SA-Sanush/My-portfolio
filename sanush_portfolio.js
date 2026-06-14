@@ -1306,17 +1306,44 @@ document.head.appendChild(style);
   // 4. Floating Resume Button (CV FAB) - Always visible, handled by CSS
 
   // 5. Contact Form Submission
-  window.handleFormSubmit = function() {
+  window.handleFormSubmit = async function() {
     const toast = document.getElementById("form-toast");
     const form = document.getElementById("portfolio-contact-form");
-    if (toast) {
-      toast.classList.add("show");
-      setTimeout(() => {
-        toast.classList.remove("show");
-      }, 5000);
-    }
-    if (form) {
-      form.reset();
+    const btn = form ? form.querySelector(".submit-btn") : null;
+    const btnSpan = btn ? btn.querySelector("span") : null;
+
+    // Show loading state
+    if (btn) { btn.disabled = true; btn.style.opacity = "0.7"; }
+    if (btnSpan) btnSpan.textContent = "Sending…";
+
+    try {
+      const formData = new FormData(form);
+      // Manually add field values since inputs use id not name
+      formData.set("name", document.getElementById("form-name").value);
+      formData.set("email", document.getElementById("form-email").value);
+      formData.set("message", document.getElementById("form-message").value);
+
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        // Success
+        if (toast) {
+          toast.classList.add("show");
+          setTimeout(() => toast.classList.remove("show"), 5000);
+        }
+        if (form) form.reset();
+      } else {
+        alert("Oops! Something went wrong: " + (data.message || "Please try again."));
+      }
+    } catch (err) {
+      alert("Network error — please email me directly at sasanush86@gmail.com");
+    } finally {
+      if (btn) { btn.disabled = false; btn.style.opacity = "1"; }
+      if (btnSpan) btnSpan.textContent = "Send Message";
     }
   };
 
