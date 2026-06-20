@@ -3089,6 +3089,10 @@ footer {
     right: 20px;
     bottom: 24px;
   }
+  .resume-fab {
+    right: 20px;
+    bottom: 96px;
+  }
 }
 
 @media (max-width: 360px) {
@@ -3765,27 +3769,13 @@ footer {
   transform: scale(1.12);
   box-shadow: 0 0 0 8px color-mix(in srgb, var(--y) 12%, transparent), 0 12px 40px rgba(0,0,0,0.6);
 }
-.fab-circle {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background: transparent;
-  color: var(--b);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: transform 0.3s ease;
-}
-.fab-circle svg {
+.resume-fab svg {
   width: 26px;
   height: 26px;
   fill: var(--b);
+  transition: transform 0.3s ease;
 }
-.fab-text {
-  display: none;
-}
-.resume-fab:hover .fab-circle {
+.resume-fab:hover svg {
   transform: rotate(360deg);
 }
 
