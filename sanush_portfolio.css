@@ -3764,6 +3764,10 @@ footer {
   text-decoration: none;
   opacity: 1;
   pointer-events: auto;
+  color: var(--b);
+}
+.resume-fab:visited {
+  color: var(--b);
 }
 .resume-fab:hover {
   transform: scale(1.12);
@@ -3774,6 +3778,9 @@ footer {
   height: 26px;
   fill: var(--b);
   transition: transform 0.3s ease;
+}
+.resume-fab svg path {
+  fill: var(--b);
 }
 .resume-fab:hover svg {
   transform: rotate(360deg);
