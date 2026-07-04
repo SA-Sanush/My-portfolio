@@ -1,8 +1,3 @@
-/* ═══════════════════════════════════════════════
-   COMMAND PALETTE — Standalone Module
-   Guaranteed to run after DOM is ready.
-   Ctrl+K / Cmd+K to open.
-═══════════════════════════════════════════════ */
 (function initCmdPalette() {
   "use strict";
 
@@ -14,21 +9,15 @@
     const body       = document.body;
 
     if (!overlay || !searchEl || !resultsEl) {
-      console.warn("[CMD-PALETTE] Required DOM elements not found.", { overlay, searchEl, resultsEl });
       return;
     }
 
-    console.log("[CMD-PALETTE] Initialised successfully.");
-
-    /* ── Cursor helpers ── */
     function cursorState(state) {
-      // state: null | 'item' | 'search'
       body.classList.remove("cmd-item-hover", "cmd-search-hover");
       if (state === "item")   body.classList.add("cmd-item-hover");
       if (state === "search") body.classList.add("cmd-search-hover");
     }
 
-    /* ── Commands ── */
     const COMMANDS = [
       { key:"top",           title:"Home — Scroll to Top",          desc:"Navigate to the hero section",                shortcut:"H", action: () => scrollTo("hero") },
       { key:"about",         title:"About — Who I Am",              desc:"Navigate to the about me section",            shortcut:"A", action: () => scrollTo("about") },
@@ -45,7 +34,6 @@
     let activeIdx = 0;
     let filtered  = [...COMMANDS];
 
-    /* ── Open / Close ── */
     function open() {
       overlay.classList.add("open");
       body.classList.add("cmd-open");
@@ -55,7 +43,6 @@
       activeIdx = 0;
       render("");
 
-      // Accessibility: Focus management
       window.lastFocusedElement = document.activeElement;
       if (window.setInertExcept) window.setInertExcept(overlay);
 
@@ -66,12 +53,11 @@
       overlay.classList.remove("open");
       body.classList.remove("cmd-open");
       body.style.overflow = "";
-      cursorState(null); // reset cursor on close
+      cursorState(null);
 
       searchEl.setAttribute("aria-expanded", "false");
       searchEl.removeAttribute("aria-activedescendant");
 
-      // Accessibility: Focus management
       if (window.clearInert) window.clearInert();
       if (window.lastFocusedElement) {
         window.lastFocusedElement.focus();
@@ -79,14 +65,12 @@
       }
     }
 
-    /* ── Scroll helper ── */
     function scrollTo(id) {
       const el = document.getElementById(id);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
       close();
     }
 
-    /* ── Render results ── */
     function render(query) {
       resultsEl.innerHTML = "";
       filtered = COMMANDS.filter(c =>
@@ -117,7 +101,6 @@
           <span class="cmd-item-shortcut">${cmd.shortcut}</span>
         `;
 
-        /* Cursor: expand ring + show SELECT on item hover */
         div.addEventListener("mouseenter", () => {
           activeIdx = idx;
           document.querySelectorAll(".cmd-item").forEach((el, i) => {
@@ -139,19 +122,16 @@
       if (activeItem) activeItem.scrollIntoView({ block: "nearest" });
     }
 
-    /* ── Search input cursor state ── */
     searchEl.addEventListener("mouseenter", () => cursorState("search"));
     searchEl.addEventListener("mouseleave", () => cursorState(null));
     searchEl.addEventListener("focus",      () => cursorState("search"));
     searchEl.addEventListener("blur",       () => cursorState(null));
 
-    /* ── Search input typing ── */
     searchEl.addEventListener("input", (e) => {
       activeIdx = 0;
       render(e.target.value);
     });
 
-    /* ── Keyboard: Global Ctrl/Cmd+K (capture phase) ── */
     document.addEventListener("keydown", (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
@@ -177,12 +157,10 @@
       }
     }, true);
 
-    /* ── Click backdrop to close ── */
     overlay.addEventListener("click", (e) => {
       if (e.target === overlay) close();
     });
 
-    /* ── Nav trigger button ── */
     if (triggerBtn) {
       const handleTrigger = (e) => {
         e.preventDefault();
@@ -194,7 +172,6 @@
     }
   }
 
-  /* Run as soon as DOM is ready */
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", setup);
   } else {

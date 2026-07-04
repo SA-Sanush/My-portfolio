@@ -5000,3 +5000,10 @@ body.cmd-search-hover #cur {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0; }
 }
+
+@media (pointer: coarse) {
+  #cur,
+  #cur-ring {
+    display: none !important;
+  }
+}

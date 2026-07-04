@@ -2,13 +2,22 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 
-loadEnvFile();
+// 1. Env File Loading (Native when possible, fallback to custom)
+if (typeof process.loadEnvFile === "function") {
+  try {
+    process.loadEnvFile();
+  } catch (error) {
+    // Ignore error if .env doesn't exist
+  }
+} else {
+  loadEnvFile();
+}
 
 const PORT = Number(process.env.PORT || 3000);
 const HOST = process.env.HOST || "127.0.0.1";
 const AI_PROVIDER = (process.env.AI_PROVIDER || "openai").toLowerCase();
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
-const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-5.2";
+const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini"; // Hardened fallback model
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
 const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 
@@ -80,6 +89,31 @@ Rules:
 - Usually answer in 2-5 sentences.
 `;
 
+// In-Memory Rate Limiter Store
+const rateLimitStore = new Map();
+
+function checkRateLimit(ip) {
+  const now = Date.now();
+  const limitWindow = 60 * 1000; // 1 minute window
+  const maxRequests = 10; // max 10 requests per minute
+
+  if (!rateLimitStore.has(ip)) {
+    rateLimitStore.set(ip, []);
+  }
+
+  const timestamps = rateLimitStore.get(ip);
+  // Remove expired timestamps
+  const filtered = timestamps.filter(t => now - t < limitWindow);
+
+  if (filtered.length >= maxRequests) {
+    return false;
+  }
+
+  filtered.push(now);
+  rateLimitStore.set(ip, filtered);
+  return true;
+}
+
 function loadEnvFile() {
   const envPath = path.join(process.cwd(), ".env");
   if (!fs.existsSync(envPath)) return;
@@ -128,29 +162,29 @@ function readJsonBody(req) {
   });
 }
 
-function buildOpenAIInput(messages) {
-  return messages.map(message => ({
-    role: message.role,
-    content: [
-      {
-        type: "input_text",
-        text: String(message.content || "")
-      }
-    ]
-  }));
-}
-
+// Fixed OpenAI completions integration
 async function getOpenAIReply({ messages, userName }) {
   if (!OPENAI_API_KEY) {
     return {
       ok: false,
       error: "missing_api_key",
-      message:
-        "The AI backend is almost ready, but `OPENAI_API_KEY` is not set on the server yet."
+      message: "The AI backend is almost ready, but `OPENAI_API_KEY` is not set on the server yet."
     };
   }
 
-  const response = await fetch("https://api.openai.com/v1/responses", {
+  // Format history messages to match standard OpenAI chat schema
+  const formattedMessages = [
+    {
+      role: "system",
+      content: `${PORTFOLIO_CONTEXT}\nVisitor name: ${userName || "Unknown"}`
+    },
+    ...messages.map(m => ({
+      role: m.role === "model" ? "assistant" : m.role,
+      content: String(m.content || "")
+    }))
+  ];
+
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -158,9 +192,8 @@ async function getOpenAIReply({ messages, userName }) {
     },
     body: JSON.stringify({
       model: OPENAI_MODEL,
-      instructions: `${PORTFOLIO_CONTEXT}\nVisitor name: ${userName || "Unknown"}`,
-      input: buildOpenAIInput(messages),
-      max_output_tokens: 500
+      messages: formattedMessages,
+      max_tokens: 500
     })
   });
 
@@ -180,8 +213,8 @@ async function getOpenAIReply({ messages, userName }) {
   }
 
   const reply =
-    typeof data.output_text === "string" && data.output_text.trim()
-      ? data.output_text.trim()
+    data.choices && data.choices[0] && data.choices[0].message && typeof data.choices[0].message.content === "string"
+      ? data.choices[0].message.content.trim()
       : "";
 
   if (!reply) {
@@ -229,8 +262,7 @@ async function getGeminiReply({ messages, userName }) {
     return {
       ok: false,
       error: "missing_api_key",
-      message:
-        "The AI backend is almost ready, but `GEMINI_API_KEY` is not set on the server yet."
+      message: "The AI backend is almost ready, but `GEMINI_API_KEY` is not set on the server yet."
     };
   }
 
@@ -293,12 +325,31 @@ function safeJoin(rootDir, requestPath) {
 }
 
 function serveStaticFile(req, res) {
-  const rootDir = process.cwd();
+  // Support serving from Vite build output directory (dist/) when available
+  const distDir = path.join(process.cwd(), "dist");
+  const useDist = fs.existsSync(distDir);
+  const rootDir = useDist ? distDir : process.cwd();
+
   const filePath = safeJoin(rootDir, req.url || "/");
   const resolvedRoot = path.resolve(rootDir);
   const resolvedFile = path.resolve(filePath);
 
+  // Prevent directory traversal
   if (!resolvedFile.startsWith(resolvedRoot)) {
+    sendJson(res, 403, { error: "forbidden" });
+    return;
+  }
+
+  // Prevent serving server config files / git metadata / node_modules in dev mode
+  const relative = path.relative(resolvedRoot, resolvedFile);
+  if (
+    relative === ".env" ||
+    relative === "server.js" ||
+    relative === "package.json" ||
+    relative === "vite.config.js" ||
+    relative.startsWith(".git") ||
+    relative.startsWith("node_modules")
+  ) {
     sendJson(res, 403, { error: "forbidden" });
     return;
   }
@@ -315,7 +366,10 @@ function serveStaticFile(req, res) {
 
     const ext = path.extname(resolvedFile).toLowerCase();
     res.writeHead(200, {
-      "Content-Type": MIME_TYPES[ext] || "application/octet-stream"
+      "Content-Type": MIME_TYPES[ext] || "application/octet-stream",
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "X-XSS-Protection": "1; mode=block"
     });
     res.end(buffer);
   });
@@ -328,13 +382,34 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (req.method === "POST" && req.url === "/api/chat") {
+    // 2. Rate Limiting Check
+    const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress || "unknown-ip";
+    if (!checkRateLimit(ip)) {
+      sendJson(res, 429, {
+        ok: false,
+        error: "rate_limit_exceeded",
+        message: "Too many requests. Please wait a minute before trying again."
+      });
+      return;
+    }
+
     try {
       const body = await readJsonBody(req);
       const messages = Array.isArray(body.messages) ? body.messages : [];
       const userName = typeof body.userName === "string" ? body.userName.trim() : "";
 
+      // 3. Payload Validation
       if (!messages.length) {
         sendJson(res, 400, { error: "missing_messages" });
+        return;
+      }
+
+      const isValidMessages = messages.every(
+        m => typeof m === "object" && typeof m.role === "string" && typeof m.content === "string"
+      );
+
+      if (!isValidMessages) {
+        sendJson(res, 400, { error: "invalid_messages_schema" });
         return;
       }
 
@@ -364,5 +439,5 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, HOST, () => {
-  console.log(`Portfolio server running at http://${HOST}:${PORT}`);
+  console.log(`Hardened Portfolio server running at http://${HOST}:${PORT}`);
 });

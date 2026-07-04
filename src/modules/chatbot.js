@@ -1,4 +1,4 @@
-(function () {
+(function initChatbot() {
   "use strict";
 
   const trigger = document.getElementById("chat-trigger");
@@ -11,6 +11,8 @@
   const inputArea = document.getElementById("chat-input-area");
   const chatInput = document.getElementById("chat-input");
   const sendBtn = document.getElementById("chat-send");
+
+  if (!trigger || !win) return;
 
   let isOpen = false;
   let userName = "";
@@ -32,7 +34,6 @@
     trigger.classList.add("open");
     win.classList.add("visible");
 
-    // Accessibility: Focus management and inert siblings
     window.lastFocusedElement = document.activeElement;
     if (window.setInertExcept) window.setInertExcept(win);
 
@@ -49,7 +50,6 @@
     trigger.classList.remove("open");
     win.classList.remove("visible");
 
-    // Accessibility: Restore focus and remove inert
     if (window.clearInert) window.clearInert();
     if (window.lastFocusedElement) {
       window.lastFocusedElement.focus();
@@ -498,7 +498,6 @@
 
   chatInput.addEventListener("input", autoResizeTextarea);
 
-  // Accessibility: Escape key bind to close chatbot
   document.addEventListener("keydown", event => {
     if (event.key === "Escape" && isOpen) {
       closeChat();
