@@ -94,3 +94,6 @@ You need a simple local server to run this locally due to CORS rules regarding S
 ## 📄 License
 
 This project is created for personal showcase and educational purposes. Feel free to explore the code!
+
+---
+*Note: PWA assets caching version bumped to v26.*
