@@ -51,8 +51,14 @@
       body.classList.add("cmd-open");
       body.style.overflow = "hidden";
       searchEl.value = "";
+      searchEl.setAttribute("aria-expanded", "true");
       activeIdx = 0;
       render("");
+
+      // Accessibility: Focus management
+      window.lastFocusedElement = document.activeElement;
+      if (window.setInertExcept) window.setInertExcept(overlay);
+
       setTimeout(() => searchEl.focus(), 50);
     }
 
@@ -61,6 +67,16 @@
       body.classList.remove("cmd-open");
       body.style.overflow = "";
       cursorState(null); // reset cursor on close
+
+      searchEl.setAttribute("aria-expanded", "false");
+      searchEl.removeAttribute("aria-activedescendant");
+
+      // Accessibility: Focus management
+      if (window.clearInert) window.clearInert();
+      if (window.lastFocusedElement) {
+        window.lastFocusedElement.focus();
+        window.lastFocusedElement = null;
+      }
     }
 
     /* ── Scroll helper ── */
@@ -80,13 +96,19 @@
       activeIdx = Math.max(0, Math.min(activeIdx, filtered.length - 1));
 
       if (filtered.length === 0) {
+        searchEl.removeAttribute("aria-activedescendant");
         resultsEl.innerHTML = `<div style="padding:16px 20px;font-size:12px;color:var(--dim);text-align:center">No commands matching "${query}"</div>`;
         return;
+      } else {
+        searchEl.setAttribute("aria-activedescendant", `cmd-item-${activeIdx}`);
       }
 
       filtered.forEach((cmd, idx) => {
         const div = document.createElement("div");
         div.className = "cmd-item" + (idx === activeIdx ? " active" : "");
+        div.id = `cmd-item-${idx}`;
+        div.setAttribute("role", "option");
+        div.setAttribute("aria-selected", idx === activeIdx ? "true" : "false");
         div.innerHTML = `
           <div class="cmd-item-left">
             <div class="cmd-item-title">${cmd.title}</div>
@@ -98,9 +120,11 @@
         /* Cursor: expand ring + show SELECT on item hover */
         div.addEventListener("mouseenter", () => {
           activeIdx = idx;
-          document.querySelectorAll(".cmd-item").forEach((el, i) =>
-            el.classList.toggle("active", i === idx)
-          );
+          document.querySelectorAll(".cmd-item").forEach((el, i) => {
+            el.classList.toggle("active", i === idx);
+            el.setAttribute("aria-selected", i === idx ? "true" : "false");
+          });
+          searchEl.setAttribute("aria-activedescendant", `cmd-item-${idx}`);
           cursorState("item");
         });
         div.addEventListener("mouseleave", () => {

@@ -50,7 +50,17 @@ You need a simple local server to run this locally due to CORS rules regarding S
    cd My-portfolio
    ```
 
-2. **Configure your EmailJS keys:**
+2. **Set up your environment variables:**
+   Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+   Open the `.env` file and insert your API key:
+   ```env
+   GEMINI_API_KEY=your_gemini_api_key_here
+   ```
+
+3. **Configure your EmailJS keys:**
    Open `sanush_portfolio.js` and insert your credentials:
    ```javascript
    const EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY"; 
@@ -58,18 +68,18 @@ You need a simple local server to run this locally due to CORS rules regarding S
    const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
    ```
 
-3. **Run a local development server:**
-   Using Node.js/npm:
+4. **Run the local development server:**
+   Using Node.js/npm (recommended for the AI Chatbot backend):
    ```bash
    npm install
-   npm run dev
+   npm start
    ```
-   Or using Python:
+   Or using Python (for serving static frontend files only; chatbot API disabled):
    ```bash
    python3 -m http.server 3000
    ```
 
-4. Open your browser and navigate to `http://localhost:3000`.
+5. Open your browser and navigate to `http://localhost:3000`.
 
 ---
 

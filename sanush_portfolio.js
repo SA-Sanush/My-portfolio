@@ -29,6 +29,30 @@ document
   });
 
 /* ═══════════════════════════════════════
+   GLOBAL INERT HELPERS (Accessibility)
+   ═══════════════════════════════════════ */
+window.lastFocusedElement = null;
+window.setInertExcept = function (activeEl) {
+  const ids = ["app", "side-dock", "project-modal", "chat-trigger", "chat-window", "resume-fab", "cmd-palette"];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el === activeEl) {
+      el.removeAttribute("inert");
+    } else {
+      el.setAttribute("inert", "");
+    }
+  });
+};
+window.clearInert = function () {
+  const ids = ["app", "side-dock", "project-modal", "chat-trigger", "chat-window", "resume-fab", "cmd-palette"];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.removeAttribute("inert");
+  });
+};
+
+/* ═══════════════════════════════════════
    LOADER — Three.js spinning logo
 ═══════════════════════════════════════ */
 (function () {
@@ -1689,12 +1713,25 @@ document.head.appendChild(style);
       el.addEventListener("mouseenter", () => curRingEl && curRingEl.classList.add("big"));
       el.addEventListener("mouseleave", () => curRingEl && curRingEl.classList.remove("big"));
     });
+
+    // Accessibility: Focus management and inert siblings
+    window.lastFocusedElement = document.activeElement;
+    if (window.setInertExcept) window.setInertExcept(modal);
+    const closeBtn = document.getElementById("modal-close");
+    if (closeBtn) setTimeout(() => closeBtn.focus(), 50);
   }
 
   function closeModal() {
-    if (!modal) return;
+    if (!modal || !modal.classList.contains("open")) return;
     modal.classList.remove("open");
     document.body.style.overflow = "";
+
+    // Accessibility: Restore focus and remove inert
+    if (window.clearInert) window.clearInert();
+    if (window.lastFocusedElement) {
+      window.lastFocusedElement.focus();
+      window.lastFocusedElement = null;
+    }
   }
 
   document.querySelectorAll(".explore-btn").forEach(el => {

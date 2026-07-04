@@ -31,17 +31,32 @@
     isOpen = true;
     trigger.classList.add("open");
     win.classList.add("visible");
+
+    // Accessibility: Focus management and inert siblings
+    window.lastFocusedElement = document.activeElement;
+    if (window.setInertExcept) window.setInertExcept(win);
+
     if (userName) {
-      chatInput.focus();
+      setTimeout(() => chatInput.focus(), 50);
     } else {
-      nameInput.focus();
+      setTimeout(() => nameInput.focus(), 50);
     }
   }
 
   function closeChat() {
+    if (!isOpen) return;
     isOpen = false;
     trigger.classList.remove("open");
     win.classList.remove("visible");
+
+    // Accessibility: Restore focus and remove inert
+    if (window.clearInert) window.clearInert();
+    if (window.lastFocusedElement) {
+      window.lastFocusedElement.focus();
+      window.lastFocusedElement = null;
+    } else {
+      trigger.focus();
+    }
   }
 
   function extendCursorRing() {
@@ -482,4 +497,11 @@
   });
 
   chatInput.addEventListener("input", autoResizeTextarea);
+
+  // Accessibility: Escape key bind to close chatbot
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && isOpen) {
+      closeChat();
+    }
+  });
 })();
