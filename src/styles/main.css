@@ -916,6 +916,13 @@ nav.nav-scrolled {
   min-height: 380px;
   position: relative;
   overflow: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+}
+.about-visual:hover {
+  border-color: var(--y);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px color-mix(in srgb, var(--y) 12%, transparent), 0 0 40px color-mix(in srgb, var(--y) 6%, transparent);
 }
 .av-bg-text {
   position: absolute;
