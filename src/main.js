@@ -10,20 +10,20 @@ import "./modules/ui-effects.js";
    SKILLS CARDS (Points to local SVGs)
 ═══════════════════════════════════════ */
 const skills = [
-  { icon: "/icons/html5.svg", name: "HTML5", pct: 90 },
-  { icon: "/icons/css.svg", name: "CSS3", pct: 85 },
-  { icon: "/icons/javascript.svg", name: "JavaScript", pct: 78 },
-  { icon: "/icons/react.svg", name: "React JS", pct: 72 },
-  { icon: "/icons/nextdotjs.svg", name: "Next JS", pct: 65 },
-  { icon: "/icons/tailwindcss.svg", name: "Tailwind CSS", pct: 80 },
-  { icon: "/icons/threedotjs.svg", name: "Three JS", pct: 60 },
-  { icon: "/icons/bootstrap.svg", name: "Bootstrap", pct: 82 }, // Bootstrap logo will load normally if CDN or fallback, let's point to local if we want, or leave as simpleicons if we download it. Wait, let's use cdn simpleicon for bootstrap as fallback or download it if we want. Let's make it /icons/bootstrap.svg. We'll download it below.
-  { icon: "/icons/figma.svg", name: "Figma", pct: 75 },
-  { icon: "/icons/python.svg", name: "Python", pct: 68 },
-  { icon: "/icons/flask.svg", name: "Flask", pct: 70 },
-  { icon: "/icons/mysql.svg", name: "MySQL", pct: 65 },
-  { icon: "/icons/git.svg", name: "Git", pct: 74 },
-  { icon: "/icons/github.svg", name: "GitHub", pct: 74 }
+  { icon: "icons/html5.svg", name: "HTML5", pct: 90 },
+  { icon: "icons/css.svg", name: "CSS3", pct: 85 },
+  { icon: "icons/javascript.svg", name: "JavaScript", pct: 78 },
+  { icon: "icons/react.svg", name: "React JS", pct: 72 },
+  { icon: "icons/nextdotjs.svg", name: "Next JS", pct: 65 },
+  { icon: "icons/tailwindcss.svg", name: "Tailwind CSS", pct: 80 },
+  { icon: "icons/threedotjs.svg", name: "Three JS", pct: 60 },
+  { icon: "icons/bootstrap.svg", name: "Bootstrap", pct: 82 },
+  { icon: "icons/figma.svg", name: "Figma", pct: 75 },
+  { icon: "icons/python.svg", name: "Python", pct: 68 },
+  { icon: "icons/flask.svg", name: "Flask", pct: 70 },
+  { icon: "icons/mysql.svg", name: "MySQL", pct: 65 },
+  { icon: "icons/git.svg", name: "Git", pct: 74 },
+  { icon: "icons/github.svg", name: "GitHub", pct: 74 }
 ];
 
 const grid = document.getElementById("skills-grid");
@@ -114,7 +114,7 @@ document.head.appendChild(style);
 ═══════════════════════════════════════ */
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js")
+    navigator.serviceWorker.register("./sw.js")
       .then((reg) => console.log("Service Worker registered successfully:", reg.scope))
       .catch((err) => console.warn("Service Worker registration failed:", err));
   });

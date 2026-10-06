@@ -1,12 +1,12 @@
-const CACHE_NAME = "sanush-portfolio-v26";
+const CACHE_NAME = "sanush-portfolio-v27";
 const ASSETS = [
-  "/",
-  "/index.html",
-  "/favicon.svg",
-  "/profile.jpg",
-  "/avatar.png",
-  "/manifest.json",
-  "/Sanush Resume.pdf"
+  "./",
+  "./index.html",
+  "./favicon.svg",
+  "./profile.jpg",
+  "./avatar.png",
+  "./manifest.json",
+  "./Sanush Resume.pdf"
 ];
 
 // Install Service Worker and cache core files
